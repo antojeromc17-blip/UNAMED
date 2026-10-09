@@ -1,6 +1,6 @@
-# PROGRESS — Windows Malware Detector
+# PROGRESS - Windows Malware Detector
 
-## Phase 0: Feasibility Check ✅
+## Phase 0: Feasibility Check - COMPLETED
 - **Date**: 2026-10-09
 - **Python version**: 3.13.0
 - **thrember version**: 0.1.0
@@ -10,9 +10,9 @@
 - **Result**: PASSED
 - **Issues**: None (resolved windows terminal emoji encoding error)
 
-## Phase 1: Data — NOT STARTED
-## Phase 2: Model Training — NOT STARTED
-## Phase 3: Detection Engine — NOT STARTED
-## Phase 4: Backend API — NOT STARTED
-## Phase 5: Frontend — NOT STARTED
-## Phase 6: Documentation — NOT STARTED
+## Phase 1: Data - COMPLETED
+## Phase 2: Model Training - COMPLETED
+## Phase 3: Detection Engine - COMPLETED
+## Phase 4: Backend API - IN PROGRESS
+## Phase 5: Frontend - NOT STARTED
+## Phase 6: Documentation - NOT STARTED

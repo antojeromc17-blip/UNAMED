@@ -1,0 +1,5 @@
+{
+  "model_name": "LightGBM",
+  "needs_scaling": false,
+  "feature_dim": 2568
+}
