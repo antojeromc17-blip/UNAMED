@@ -16,6 +16,7 @@ export default function DashboardPage() {
   const bestModel = metrics.length > 0 ? metrics[0] : null
 
   return (
+    <div className="container">
     <div>
       <h1 style={{ fontSize: '2rem', marginBottom: '2rem' }}>Training Metrics</h1>
       
@@ -23,14 +24,14 @@ export default function DashboardPage() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '3rem' }}>
           
           <div className="glass-panel" style={{ padding: '1.5rem', borderLeft: '4px solid var(--primary)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted-light)' }}>
               <Zap size={18} /> Best Model
             </div>
             <h2 style={{ fontSize: '1.5rem', marginTop: '0.5rem' }}>{bestModel.model}</h2>
           </div>
 
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted-light)' }}>
               <Activity size={18} /> Accuracy
             </div>
             <h2 style={{ fontSize: '1.5rem', marginTop: '0.5rem', color: 'var(--primary)' }}>
@@ -39,7 +40,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted-light)' }}>
               <Cpu size={18} /> Inference Time
             </div>
             <h2 style={{ fontSize: '1.5rem', marginTop: '0.5rem' }}>
@@ -48,7 +49,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="glass-panel" style={{ padding: '1.5rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted-light)' }}>
               <Clock size={18} /> Training Time
             </div>
             <h2 style={{ fontSize: '1.5rem', marginTop: '0.5rem' }}>
@@ -93,5 +94,6 @@ export default function DashboardPage() {
         </table>
       </div>
     </div>
+      </div>
   )
 }
