@@ -412,8 +412,8 @@ export default function LandingPage() {
               {
                 step: "03",
                 border: "4px solid #ffffff",
-                title: "CONSENSUS VERDICT",
-                desc: "Pre-trained models evaluate the vector, delivering instant calibrated malware confidence & threat breakdown."
+                title: "MULTI-MODEL INFERENCE",
+                desc: "Evaluates the 2,568-D feature vector across all 5 trained models in parallel, delivering independent calibrated threat verdicts in sub-50ms."
               }
             ].map((s, idx) => (
               <div key={idx} style={{
@@ -527,61 +527,211 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 7. TESTIMONIALS (Sage Background, Asymmetric Cards) */}
-      <section style={{ backgroundColor: 'var(--accent-sage)', padding: '5rem 2rem', borderBottom: '2px solid #000000' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      {/* 7. SYSTEM ARCHITECTURE & TECHNICAL ROADMAP (Presentation & Defense Ready) */}
+      <section style={{ backgroundColor: 'var(--accent-sage)', padding: '5.5rem 2rem', borderBottom: '2px solid #000000' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
             <span style={{
               backgroundColor: '#000000',
               color: 'var(--primary-yellow)',
               border: '2px solid #000000',
-              padding: '0.3rem 1rem',
+              padding: '0.35rem 1.2rem',
               fontWeight: 800,
-              fontSize: '0.8rem',
-              borderRadius: '9999px'
-            }}>VERIFIED ACCURACY</span>
-            <h2 style={{ fontSize: '2.8rem', marginTop: '1rem', color: '#000000' }}>
-              WHAT ANALYSTS SAY
+              fontSize: '0.82rem',
+              borderRadius: '9999px',
+              display: 'inline-block'
+            }}>TECHNICAL SPECIFICATION</span>
+            <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginTop: '1rem', color: '#000000', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+              SYSTEM ARCHITECTURE & METHODOLOGY
             </h2>
+            <p style={{ maxWidth: '750px', margin: '0.75rem auto 0 auto', color: '#171e19', fontSize: '1.05rem', fontWeight: 600 }}>
+              End-to-end dataflow pipeline: from raw binary ingestion and vectorized 2,568-D feature extraction to multi-model inference and real-time threat telemetry.
+            </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {[
-              {
-                stars: 5,
-                text: "The static PE feature extraction catches packed ransomware variants in milliseconds that our signature scanners completely overlook.",
-                author: "Cybersecurity Lead",
-                role: "FinTech IR Team"
-              },
-              {
-                stars: 5,
-                text: "Having the multi-model consensus option is game-changing. Seeing how Random Forest vs LightGBM evaluate borderline binaries gives total confidence.",
-                author: "Senior Malware Researcher",
-                role: "Threat Lab"
-              },
-              {
-                stars: 5,
-                text: "The combination of EMBER dataset rigor and Neo-Brutalist real-time interface makes this an exceptional engineering prototype.",
-                author: "External Evaluator",
-                role: "Academic Defense Board"
-              }
-            ].map((t, i) => (
-              <div key={i} className="card-asymmetric">
-                <div style={{ display: 'flex', gap: '4px', marginBottom: '1rem' }}>
-                  {[...Array(t.stars)].map((_, sIdx) => (
-                    <Star key={sIdx} size={18} fill="#ffbc2e" color="#ffbc2e" />
-                  ))}
+          {/* 4-Layer Architecture Pipeline Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.5rem', marginBottom: '3.5rem' }}>
+            
+            {/* Layer 1 */}
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '2px solid #000000',
+              borderRadius: '0.75rem',
+              padding: '1.8rem',
+              boxShadow: '4px 4px 0px #000000',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ backgroundColor: 'var(--primary-yellow)', border: '1.5px solid #000000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>
+                    TIER 01
+                  </span>
+                  <Binary size={22} color="#000000" />
                 </div>
-                <p style={{ fontSize: '1rem', fontStyle: 'italic', marginBottom: '1.5rem', lineHeight: 1.5, color: '#18181b' }}>
-                  "{t.text}"
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.6rem', fontWeight: 800 }}>Binary Ingestion & Parsing</h3>
+                <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, marginBottom: '1rem' }}>
+                  Accepts Windows PE executables (.exe, .dll, .sys) via multipart HTTP stream. Buffered purely in byte memory without execution or sandboxing overhead.
                 </p>
-                <div>
-                  <div style={{ fontWeight: 800, fontFamily: 'var(--font-heading)' }}>{t.author}</div>
-                  <div style={{ fontSize: '0.85rem', color: '#71717a' }}>{t.role}</div>
-                </div>
               </div>
-            ))}
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', fontSize: '0.75rem', fontWeight: 700, color: '#1e293b' }}>
+                Tech: FastAPI Async • In-Memory Buffer • Non-Executing
+              </div>
+            </div>
+
+            {/* Layer 2 */}
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '2px solid #000000',
+              borderRadius: '0.75rem',
+              padding: '1.8rem',
+              boxShadow: '4px 4px 0px #000000',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ backgroundColor: 'var(--accent-sage)', border: '1.5px solid #000000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>
+                    TIER 02
+                  </span>
+                  <Cpu size={22} color="#000000" />
+                </div>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.6rem', fontWeight: 800 }}>Vectorized 2,568-D Extraction</h3>
+                <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, marginBottom: '1rem' }}>
+                  Parses COFF headers, imports/exports, section entropy, and scans 57 compiled IOC string patterns using vectorized C/NumPy kernels.
+                </p>
+              </div>
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', fontSize: '0.75rem', fontWeight: 700, color: '#1e293b' }}>
+                Tech: Thrember Engine • Selective Pefile • NumPy C-Kernels
+              </div>
+            </div>
+
+            {/* Layer 3 */}
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '2px solid #000000',
+              borderRadius: '0.75rem',
+              padding: '1.8rem',
+              boxShadow: '4px 4px 0px #000000',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ backgroundColor: 'var(--bg-charcoal)', color: '#ffffff', border: '1.5px solid #000000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>
+                    TIER 03
+                  </span>
+                  <Layers size={22} color="#000000" />
+                </div>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.6rem', fontWeight: 800 }}>Multi-Model Classifier Brain</h3>
+                <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, marginBottom: '1rem' }}>
+                  Dispatches vectors simultaneously across all 5 pre-trained models held in RAM: LightGBM (96.9% Acc), Random Forest, Decision Tree, Logistic Reg., and Naive Bayes.
+                </p>
+              </div>
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', fontSize: '0.75rem', fontWeight: 700, color: '#1e293b' }}>
+                Tech: RAM Cache • Scikit-Learn • Microsoft LightGBM
+              </div>
+            </div>
+
+            {/* Layer 4 */}
+            <div style={{
+              backgroundColor: '#ffffff',
+              border: '2px solid #000000',
+              borderRadius: '0.75rem',
+              padding: '1.8rem',
+              boxShadow: '4px 4px 0px #000000',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between'
+            }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ backgroundColor: 'var(--primary-yellow)', border: '1.5px solid #000000', padding: '2px 8px', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 800 }}>
+                    TIER 04
+                  </span>
+                  <Activity size={22} color="#000000" />
+                </div>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '0.6rem', fontWeight: 800 }}>Audit & Telemetry Interface</h3>
+                <p style={{ fontSize: '0.88rem', color: '#475569', lineHeight: 1.5, marginBottom: '1rem' }}>
+                  Delivers real-time execution metrics, throughput (MB/s), individual model verdict badges, calibrated threat probabilities, and interactive Confusion Matrix inspection.
+                </p>
+              </div>
+              <div style={{ borderTop: '1px solid #e2e8f0', paddingTop: '0.75rem', fontSize: '0.75rem', fontWeight: 700, color: '#1e293b' }}>
+                Tech: Neo-Brutalist React • Live Throughput • Cell Auditor
+              </div>
+            </div>
+
+          </div>
+
+          {/* 10-Phase Project Implementation Roadmap */}
+          <div style={{
+            backgroundColor: '#ffffff',
+            border: '2px solid #000000',
+            borderRadius: '1rem',
+            padding: '2.5rem',
+            boxShadow: '6px 6px 0px #000000'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem' }}>
+              <div>
+                <span style={{ backgroundColor: 'var(--bg-charcoal)', color: 'var(--primary-yellow)', padding: '3px 10px', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 800 }}>
+                  METHODOLOGY
+                </span>
+                <h3 style={{ fontSize: '1.8rem', marginTop: '0.5rem', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
+                  PROJECT IMPLEMENTATION ROADMAP (PHASES 0–10)
+                </h3>
+              </div>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#475569' }}>
+                Fully Documented in PROGRESS.md & project_history_report.md
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
+              
+              <div style={{ backgroundColor: '#f8fafc', border: '1.5px solid #000000', borderRadius: '8px', padding: '1.2rem' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#0284c7', marginBottom: '6px' }}>PHASES 0 – 2</div>
+                <div style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Data & Model Engineering</div>
+                <ul style={{ fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, paddingLeft: '1.2rem', margin: 0 }}>
+                  <li>Verified System32 PE feasibility with thrember</li>
+                  <li>Memory-mapped 3.12M EMBER dataset into balanced 100k subset</li>
+                  <li>Trained & benchmarked all 5 machine learning models</li>
+                </ul>
+              </div>
+
+              <div style={{ backgroundColor: '#f8fafc', border: '1.5px solid #000000', borderRadius: '8px', padding: '1.2rem' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#16a34a', marginBottom: '6px' }}>PHASES 3 – 5</div>
+                <div style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Detection Engine & Web Stack</div>
+                <ul style={{ fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, paddingLeft: '1.2rem', margin: 0 }}>
+                  <li>Developed CLI detection interface in Python</li>
+                  <li>Wrapped ML engine in asynchronous FastAPI REST service</li>
+                  <li>Built initial React + Vite dashboard on port 5173</li>
+                </ul>
+              </div>
+
+              <div style={{ backgroundColor: '#f8fafc', border: '1.5px solid #000000', borderRadius: '8px', padding: '1.2rem' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ea580c', marginBottom: '6px' }}>PHASES 6 – 8</div>
+                <div style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Neo-Brutalism & Multi-Model</div>
+                <ul style={{ fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, paddingLeft: '1.2rem', margin: 0 }}>
+                  <li>Full UI overhaul to Neo-Brutalist SaaS design system</li>
+                  <li>Pre-cached all 5 models in RAM for sub-10ms inference</li>
+                  <li>Built All-Models 5-way scan showing individual answers</li>
+                </ul>
+              </div>
+
+              <div style={{ backgroundColor: '#f8fafc', border: '1.5px solid #000000', borderRadius: '8px', padding: '1.2rem' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, color: '#7c3aed', marginBottom: '6px' }}>PHASES 9 – 10</div>
+                <div style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '6px' }}>Auditor & Latency Optimization</div>
+                <ul style={{ fontSize: '0.82rem', color: '#475569', lineHeight: 1.5, paddingLeft: '1.2rem', margin: 0 }}>
+                  <li>Created Interactive 2x2 Confusion Matrix Auditor</li>
+                  <li>Resolved 18s latency on 10MB PEs with selective parsing</li>
+                  <li>Achieved 19x throughput surge (0.6 MB/s to 11.4 MB/s) with 100% parity</li>
+                </ul>
+              </div>
+
+            </div>
           </div>
 
         </div>
@@ -638,11 +788,11 @@ export default function LandingPage() {
           <div>
             <h4 style={{ color: 'var(--primary-yellow)', fontSize: '0.95rem', marginBottom: '1rem' }}>MODELS</h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.6rem', fontSize: '0.85rem', color: '#b7c6c2' }}>
-              <li>LightGBM (Recommended)</li>
-              <li>Random Forest (60 Trees)</li>
-              <li>Decision Tree</li>
-              <li>Logistic Regression</li>
-              <li>Ensemble Consensus</li>
+              <li>LightGBM (96.9% Acc)</li>
+              <li>Random Forest (95.6% Acc)</li>
+              <li>Decision Tree (94.1% Acc)</li>
+              <li>Logistic Regression (93.2% Acc)</li>
+              <li>Gaussian Naive Bayes (64.3% Acc)</li>
             </ul>
           </div>
 
