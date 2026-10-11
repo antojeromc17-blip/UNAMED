@@ -28,15 +28,14 @@ class MalwareDetector:
         # In-memory model cache
         self.models_cache = {}
 
-        # Pre-load LightGBM (default best model)
-        default_path = os.path.join(MODELS_DIR, "LightGBM.joblib")
-        if not os.path.exists(default_path):
-            default_path = os.path.join(MODELS_DIR, "best_model.joblib")
-        if os.path.exists(default_path):
+        # Pre-load ALL available models into memory at startup for zero-latency inference
+        print("Pre-loading models into RAM for instant inference...")
+        for m_name in self.get_available_models():
             try:
-                self.models_cache["LightGBM"] = joblib.load(default_path)
+                self.load_model(m_name)
+                print(f"  ✓ Cached in RAM: {m_name}")
             except Exception as e:
-                print(f"Warning: Could not pre-load LightGBM: {e}")
+                print(f"  Warning: Could not cache {m_name}: {e}")
 
     def get_available_models(self):
         """Returns list of models available in the models directory."""

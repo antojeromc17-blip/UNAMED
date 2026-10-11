@@ -52,6 +52,8 @@ export default function ScanPage() {
   const [file, setFile] = useState(null)
   const [selectedModel, setSelectedModel] = useState('LightGBM')
   const [loading, setLoading] = useState(false)
+  const [scanStage, setScanStage] = useState('')
+  const [scanDuration, setScanDuration] = useState(null)
   const [result, setResult] = useState(null)
   const fileInputRef = useRef(null)
 
@@ -66,18 +68,38 @@ export default function ScanPage() {
     if (!file) return
     setLoading(true)
     setResult(null)
+    setScanDuration(null)
+    const startTime = Date.now()
+
+    setScanStage(`Uploading ${(file.size / (1024 * 1024)).toFixed(1)} MB binary...`)
+    
+    const stageTimer1 = setTimeout(() => {
+      setScanStage(`Deep Static Analysis: Extracting 2,568 PE features across ${(file.size / 1024).toFixed(0)} KB...`)
+    }, 400)
+
+    const stageTimer2 = setTimeout(() => {
+      setScanStage(`Executing ${selectedModel.toUpperCase()} classification model...`)
+    }, 1800)
+
     const formData = new FormData()
     formData.append('file', file)
     formData.append('model_name', selectedModel)
+
     try {
       const res = await axios.post('http://127.0.0.1:8000/scan', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       })
+      clearTimeout(stageTimer1)
+      clearTimeout(stageTimer2)
+      setScanDuration(((Date.now() - startTime) / 1000).toFixed(2))
       setResult(res.data)
     } catch (err) {
+      clearTimeout(stageTimer1)
+      clearTimeout(stageTimer2)
       setResult({ error: err.response?.data?.detail || err.message })
     } finally {
       setLoading(false)
+      setScanStage('')
     }
   }
 
@@ -266,16 +288,36 @@ export default function ScanPage() {
             </h3>
           )}
 
-          <div style={{ marginTop: '2rem' }}>
+          <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', width: '100%', maxWidth: '500px' }}>
             <button 
               className="btn-brutal"
               onClick={scanFile}
               disabled={!file || loading}
-              style={{ minWidth: '260px' }}
+              style={{ minWidth: '280px', width: '100%' }}
             >
-              <span>{loading ? `ANALYZING WITH ${activeModelMeta.name.toUpperCase()}...` : `ANALYZE WITH ${activeModelMeta.name.toUpperCase()}`}</span>
+              <span>{loading ? `ANALYZING ${(file.size / 1024).toFixed(0)} KB BINARY...` : `ANALYZE WITH ${activeModelMeta.name.toUpperCase()}`}</span>
               <ArrowRight size={18} />
             </button>
+
+            {loading && scanStage && (
+              <div style={{
+                width: '100%',
+                backgroundColor: 'var(--primary-yellow)',
+                border: '2px solid #000000',
+                borderRadius: '0.5rem',
+                padding: '0.8rem 1.2rem',
+                boxShadow: '2px 2px 0px #000000',
+                textAlign: 'center',
+                animation: 'pulse 1.5s infinite'
+              }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', marginBottom: '2px' }}>
+                  // LIVE SCAN PIPELINE:
+                </div>
+                <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                  {scanStage}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -313,6 +355,29 @@ export default function ScanPage() {
             <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>
               {result.file}
             </h2>
+
+            {/* Latency & File Size Banner */}
+            {scanDuration && (
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '1rem',
+                backgroundColor: '#f1f5f9',
+                border: '1px solid #000000',
+                borderRadius: '4px',
+                padding: '4px 12px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                marginBottom: '1.5rem',
+                color: '#334155'
+              }}>
+                <span>FILE SIZE: {(file?.size / 1024).toFixed(1)} KB</span>
+                <span>•</span>
+                <span>SCAN TIME: {scanDuration}s</span>
+                <span>•</span>
+                <span>PARSING RATE: {((file?.size / (1024 * 1024)) / parseFloat(scanDuration)).toFixed(1)} MB/s</span>
+              </div>
+            )}
 
             {/* Metrics Grid */}
             <div style={{
