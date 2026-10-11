@@ -114,15 +114,15 @@ This document serves as the comprehensive, unfiltered history of the Windows Mal
 
 ---
 
-## Phase 8: Multi-Model Architecture & Consensus Engine
-**Goal:** Allow users to choose any individual model or run an Ensemble Consensus scan combining all 5 models.  
+## Phase 8: Multi-Model Architecture (Individual & All-Model Execution)
+**Goal:** Allow users to evaluate any individual model or run all 5 models concurrently to compare each model's independent answer.  
 **Status:** Completed  
 
 **Implementation:**
 1. Updated `src/detection.py` and `src/api.py` to support dynamic model dispatch.
 2. Added pre-caching of all 5 models into RAM on server startup for instantaneous inference.
-3. Added **Ensemble (Consensus)** voting mode: computes mean probability and detailed per-model verdicts.
-4. Created an interactive model selection grid on the frontend with individual model descriptions and metrics.
+3. Added **All Models (Run All 5)** mode: runs all 5 models simultaneously and outputs the independent verdict, confidence, and probability of each model side-by-side.
+4. Created an interactive model selection grid on the frontend with individual model cards and comparative breakdown.
 
 ---
 

@@ -279,11 +279,13 @@ class MalwareDetector:
 
             t_infer_start = time.time()
 
-            # If ensemble requested
-            if model_name.lower() in ["ensemble", "all", "all models", "ensemble (consensus)"]:
+            # If all models requested (runs all models and gives each model's independent answer)
+            if model_name.lower() in ["all", "all models", "all (run all 5)", "all models (run all 5)", "all models (compare all 5)", "ensemble", "ensemble (consensus)"]:
                 available = self.get_available_models()
                 breakdown = {}
                 probs = []
+                safe_count = 0
+                malware_count = 0
                 for m_name in available:
                     try:
                         m = self.load_model(m_name)
@@ -292,26 +294,36 @@ class MalwareDetector:
                             feats = self.scaler.transform(feats)
                         p = float(m.predict_proba(feats)[0][1])
                         probs.append(p)
+                        is_mal = bool(p >= 0.5)
+                        if is_mal:
+                            malware_count += 1
+                        else:
+                            safe_count += 1
                         breakdown[m_name] = {
-                            "is_malware": bool(p >= 0.5),
+                            "is_malware": is_mal,
+                            "verdict": "MALWARE" if is_mal else "SAFE",
                             "probability": round(p, 4),
-                            "confidence": round(p if p >= 0.5 else 1.0 - p, 4),
+                            "confidence": round(p if is_mal else 1.0 - p, 4),
                         }
                     except Exception as err:
                         print(f"Error predicting with {m_name}: {err}")
 
-                if not probs:
-                    return {"error": "No models available for ensemble."}
+                if not breakdown:
+                    return {"error": "No models available."}
 
                 infer_time_ms = round((time.time() - t_infer_start) * 1000, 1)
-                avg_prob = float(np.mean(probs))
-                is_malware = bool(avg_prob >= 0.5)
+                
+                # Primary reference is top-performing model (LightGBM)
+                primary_prob = breakdown.get("LightGBM", {}).get("probability", float(np.mean(probs)))
+                is_malware = bool(primary_prob >= 0.5)
+
                 return {
                     "file": os.path.basename(file_path),
                     "is_malware": is_malware,
-                    "confidence": float(avg_prob) if is_malware else float(1.0 - avg_prob),
-                    "malware_probability": float(avg_prob),
-                    "model_used": "Ensemble (Consensus)",
+                    "confidence": round(primary_prob if is_malware else 1.0 - primary_prob, 4),
+                    "malware_probability": round(primary_prob, 4),
+                    "model_used": "All 5 Models",
+                    "summary": f"{safe_count} of 5 Models Flagged Safe • {malware_count} of 5 Flagged Malware",
                     "models_breakdown": breakdown,
                     "extraction_time_ms": extract_time_ms,
                     "inference_time_ms": infer_time_ms,

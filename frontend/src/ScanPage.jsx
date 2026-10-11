@@ -40,11 +40,11 @@ const MODEL_OPTIONS = [
     desc: 'Probabilistic baseline — Ultra-high malware recall (99.14%) prioritizing zero missed threats.' 
   },
   { 
-    id: 'Ensemble', 
-    name: '⚡ Ensemble Consensus', 
-    tag: 'MULTI-ENGINE', 
-    acc: 'ALL', 
-    desc: 'Concurrent Multi-Engine Analysis — Runs all 5 ML models simultaneously and calculates consensus.' 
+    id: 'All Models', 
+    name: 'All Models (Run All 5)', 
+    tag: '5-WAY SCAN', 
+    acc: 'ALL 5', 
+    desc: 'Runs all 5 models concurrently and displays each model\'s individual answer and probability side-by-side.' 
   },
 ]
 
@@ -338,17 +338,17 @@ export default function ScanPage() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.75rem',
-              backgroundColor: result.is_malware ? '#ff5f57' : 'var(--accent-sage)',
-              color: result.is_malware ? '#ffffff' : '#000000',
+              backgroundColor: result.models_breakdown ? 'var(--primary-yellow)' : (result.is_malware ? '#ff5f57' : 'var(--accent-sage)'),
+              color: result.models_breakdown ? '#000000' : (result.is_malware ? '#ffffff' : '#000000'),
               border: '2px solid #000000',
               borderRadius: '9999px',
               padding: '0.6rem 1.8rem',
               boxShadow: '4px 4px 0px #000000',
               marginBottom: '1.5rem'
             }}>
-              {result.is_malware ? <AlertOctagon size={28} /> : <ShieldCheck size={28} />}
+              {result.models_breakdown ? <Layers size={28} /> : (result.is_malware ? <AlertOctagon size={28} /> : <ShieldCheck size={28} />)}
               <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', letterSpacing: '-0.02em' }}>
-                {result.is_malware ? 'MALWARE DETECTED' : 'SAFE / BENIGN'}
+                {result.models_breakdown ? '5-MODEL MULTI-SCAN COMPLETE' : (result.is_malware ? 'MALWARE DETECTED' : 'SAFE / BENIGN')}
               </span>
             </div>
 
@@ -436,22 +436,37 @@ export default function ScanPage() {
               </div>
             </div>
 
-            {/* Ensemble 5-Model Breakdown */}
+            {/* 5-Model Individual Answers */}
             {result.models_breakdown && (
               <div style={{
                 borderTop: '2px solid #000000',
                 paddingTop: '2rem',
                 textAlign: 'left'
               }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
-                  <Layers size={20} color="#000000" />
-                  <h3 style={{ fontSize: '1.2rem' }}>CONSENSUS BREAKDOWN ACROSS ALL 5 MODELS</h3>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <Layers size={22} color="#000000" />
+                    <h3 style={{ fontSize: '1.25rem', margin: 0, fontWeight: 800 }}>INDIVIDUAL ANSWERS FROM EACH MODEL</h3>
+                  </div>
+                  {result.summary && (
+                    <span style={{
+                      backgroundColor: 'var(--primary-yellow)',
+                      border: '2px solid #000000',
+                      borderRadius: '6px',
+                      padding: '4px 10px',
+                      fontSize: '0.82rem',
+                      fontWeight: 800,
+                      boxShadow: '2px 2px 0px #000000'
+                    }}>
+                      {result.summary}
+                    </span>
+                  )}
                 </div>
 
                 <div style={{
                   display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-                  gap: '0.75rem'
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '1rem'
                 }}>
                   {Object.entries(result.models_breakdown).map(([mName, mData]) => (
                     <div
@@ -460,26 +475,40 @@ export default function ScanPage() {
                         backgroundColor: '#ffffff',
                         border: '2px solid #000000',
                         borderRadius: '0.5rem',
-                        padding: '0.8rem',
-                        boxShadow: '2px 2px 0px #000000'
+                        padding: '1rem',
+                        boxShadow: '3px 3px 0px #000000',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'space-between',
+                        gap: '0.75rem'
                       }}
                     >
-                      <div style={{ fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px' }}>{mName}</div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div>
+                        <div style={{ fontSize: '0.95rem', fontWeight: 800, marginBottom: '4px' }}>{mName}</div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
+                          Threat Prob: {(mData.probability * 100).toFixed(1)}%
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '0.5rem', borderTop: '1px solid #e2e8f0' }}>
                         <span style={{
-                          fontSize: '0.7rem',
+                          fontSize: '0.75rem',
                           fontWeight: 800,
-                          padding: '2px 6px',
+                          padding: '3px 8px',
                           borderRadius: '4px',
-                          border: '1px solid #000000',
+                          border: '2px solid #000000',
                           backgroundColor: mData.is_malware ? '#ff5f57' : 'var(--accent-sage)',
-                          color: mData.is_malware ? '#ffffff' : '#000000'
+                          color: mData.is_malware ? '#ffffff' : '#000000',
+                          boxShadow: '1px 1px 0px #000000'
                         }}>
-                          {mData.is_malware ? 'MALWARE' : 'BENIGN'}
+                          {mData.is_malware ? 'MALWARE' : 'SAFE'}
                         </span>
-                        <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>
-                          {(mData.confidence * 100).toFixed(1)}%
-                        </span>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '0.65rem', display: 'block', color: '#64748b', fontWeight: 700 }}>CONFIDENCE</span>
+                          <span style={{ fontWeight: 800, fontSize: '1rem' }}>
+                            {(mData.confidence * 100).toFixed(1)}%
+                          </span>
+                        </div>
                       </div>
                     </div>
                   ))}
