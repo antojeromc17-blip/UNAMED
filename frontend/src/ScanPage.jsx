@@ -129,7 +129,7 @@ export default function ScanPage() {
         }}>
           <Zap size={16} fill="var(--primary-yellow)" color="#000000" />
           <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.85rem' }}>
-            STATIC PE ANALYSIS ENGINE
+            STATIC PE ANALYSIS ENGINE • TRAINED ON 100,000 SAMPLES
           </span>
         </div>
 
@@ -137,7 +137,7 @@ export default function ScanPage() {
           ZERO-DAY THREAT SCANNER
         </h1>
         <p style={{ maxWidth: '680px', fontSize: '1.1rem', color: '#171e19', marginBottom: '2.5rem', fontWeight: 500 }}>
-          Upload any Windows executable (.exe, .dll, .sys). Select an algorithm or run all 5 models via Ensemble Consensus.
+          Upload any Windows executable (.exe, .dll, .sys). Extracts 2,568 static structural features against models trained on 100,000 PE binaries.
         </p>
 
         {/* MODEL SELECTION BOX */}

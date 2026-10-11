@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Activity, Cpu, Clock, Zap, Award, Layers } from 'lucide-react'
+import { Activity, Cpu, Clock, Zap, Award, Layers, Database, ShieldCheck } from 'lucide-react'
 import metricsData from './model_metrics.json'
 
 export default function DashboardPage() {
@@ -40,6 +40,62 @@ export default function DashboardPage() {
         <p style={{ maxWidth: '680px', fontSize: '1.1rem', color: '#171e19', marginBottom: '2.5rem', fontWeight: 500 }}>
           Empirical evaluation across 5 machine learning architectures trained on the EMBER 2024 static PE dataset.
         </p>
+
+                {/* Dataset Rigor & Scale Header Banner */}
+        <div style={{
+          backgroundColor: '#ffffff',
+          border: '2px solid #000000',
+          borderRadius: '0.75rem',
+          boxShadow: 'var(--shadow-md)',
+          padding: '1.25rem 1.75rem',
+          marginBottom: '2rem',
+          display: 'flex',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '1.5rem'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div style={{
+              width: '44px',
+              height: '44px',
+              backgroundColor: 'var(--primary-yellow)',
+              border: '2px solid #000000',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '2px 2px 0px #000000',
+              borderRadius: '8px'
+            }}>
+              <Database size={24} color="#000000" />
+            </div>
+            <div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1rem', textTransform: 'uppercase' }}>
+                TRAINED ON 100,000 BALANCED SAMPLES (EMBER 2024 BENCHMARK)
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#52525b', fontWeight: 500 }}>
+                Sampled from 3,120,000 raw binary pool (60.6 GB) • Stratified 50,000 Benign / 50,000 Malware • Evaluated on 24,979 held-out test files
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '1.35rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>100,000</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#52525b', textTransform: 'uppercase' }}>Train Samples</div>
+            </div>
+            <div style={{ width: '1px', backgroundColor: '#000000', alignSelf: 'stretch' }} />
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '1.35rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>24,979</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#52525b', textTransform: 'uppercase' }}>Test Samples</div>
+            </div>
+            <div style={{ width: '1px', backgroundColor: '#000000', alignSelf: 'stretch' }} />
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: '1.35rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>2,568</div>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#52525b', textTransform: 'uppercase' }}>Features/File</div>
+            </div>
+          </div>
+        </div>
 
         {/* 4 Stat Cards */}
         {bestModel && (

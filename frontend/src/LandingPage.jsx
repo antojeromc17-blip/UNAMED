@@ -52,7 +52,7 @@ export default function LandingPage() {
                 border: '1px solid #000000'
               }}>MINI PROJECT</span>
               <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: '0.85rem' }}>
-                MACHINE LEARNING FOR CYBERSECURITY
+                TRAINED ON 100,000 PE BINARIES • 2,568 FEATURES
               </span>
             </div>
 
@@ -208,7 +208,106 @@ export default function LandingPage() {
       </section>
 
       {/* 2. PROJECT OVERVIEW: WHAT WE BUILT */}
-      <section style={{ backgroundColor: '#ffffff', padding: '5rem 2rem', borderBottom: '2px solid #000000' }}>
+            {/* 1.5 DATASET ENGINEERING & MASSIVE SCALE BENCHMARK */}
+      <section style={{ backgroundColor: 'var(--primary-yellow)', padding: '4.5rem 2rem', borderBottom: '2px solid #000000' }}>
+        <div style={{ maxWidth: '1240px', margin: '0 auto' }}>
+          
+          <div style={{
+            backgroundColor: '#ffffff',
+            border: '2px solid #000000',
+            borderRadius: '9999px',
+            padding: '0.35rem 1.2rem',
+            boxShadow: '2px 2px 0px #000000',
+            marginBottom: '1rem',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem'
+          }}>
+            <Database size={16} fill="#000000" color="#000000" />
+            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.85rem' }}>
+              DATASET RIGOR & TRAINING SCALE
+            </span>
+          </div>
+
+          <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginBottom: '0.8rem', color: '#000000' }}>
+            TRAINED ON 100,000 SAMPLES ACROSS 2,568 DIMENSIONS
+          </h2>
+          <p style={{ maxWidth: '780px', fontSize: '1.1rem', color: '#171e19', marginBottom: '2.5rem', fontWeight: 600 }}>
+            To achieve reliable zero-day detection without class bias, our models were trained on a strictly balanced subset of 100,000 PE binaries sampled from the 3.12 Million executable EMBER 2024 repository (60+ GB raw data).
+          </p>
+
+          {/* 4 Big Scale Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+            
+            {/* Card 1: 100,000 */}
+            <div style={{ backgroundColor: '#ffffff', border: '2px solid #000000', borderRadius: '0.75rem', padding: '1.75rem', boxShadow: 'var(--shadow-md)' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: '#52525b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Activity size={16} color="#000000" /> BALANCED TRAINING SET
+              </div>
+              <div style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', fontWeight: 800, color: '#000000', margin: '0.4rem 0' }}>
+                100,000
+              </div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#171e19' }}>
+                50,000 Benign • 50,000 Malware
+              </div>
+              <p style={{ fontSize: '0.82rem', color: '#52525b', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                A 1:1 class distribution ensures zero prior probability bias during tree splits and gradient descent.
+              </p>
+            </div>
+
+            {/* Card 2: 3.12M */}
+            <div style={{ backgroundColor: 'var(--bg-charcoal)', color: '#ffffff', border: '2px solid #000000', borderRadius: '0.75rem', padding: '1.75rem', boxShadow: 'var(--shadow-md)' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--primary-yellow)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Database size={16} color="var(--primary-yellow)" /> RAW DATASET POOL
+              </div>
+              <div style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', fontWeight: 800, color: '#ffffff', margin: '0.4rem 0' }}>
+                3.12M+
+              </div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--accent-sage)' }}>
+                60.6 GB JSONL / 29.85 GB Vectorized
+              </div>
+              <p style={{ fontSize: '0.82rem', color: '#b7c6c2', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                Sourced from the modern EMBER 2024 benchmark, streamed via high-speed memory mapping (<code style={{ color: 'var(--primary-yellow)' }}>numpy.memmap</code>).
+              </p>
+            </div>
+
+            {/* Card 3: 24,979 */}
+            <div style={{ backgroundColor: 'var(--accent-sage)', border: '2px solid #000000', borderRadius: '0.75rem', padding: '1.75rem', boxShadow: 'var(--shadow-md)' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: '#171e19', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Layers size={16} color="#000000" /> HELD-OUT TEST SPLIT
+              </div>
+              <div style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', fontWeight: 800, color: '#000000', margin: '0.4rem 0' }}>
+                24,979
+              </div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#171e19' }}>
+                100% Independent Validation
+              </div>
+              <p style={{ fontSize: '0.82rem', color: '#27272a', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                Rigorous evaluation across 12,004 malicious and 12,195 benign samples for accurate confusion matrix audits.
+              </p>
+            </div>
+
+            {/* Card 4: 2,568 */}
+            <div style={{ backgroundColor: '#ffffff', border: '2px solid #000000', borderRadius: '0.75rem', padding: '1.75rem', boxShadow: 'var(--shadow-md)' }}>
+              <div style={{ fontSize: '0.8rem', fontWeight: 800, textTransform: 'uppercase', color: '#52525b', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Binary size={16} color="#000000" /> FEATURE DIMENSIONS
+              </div>
+              <div style={{ fontSize: '3rem', fontFamily: 'var(--font-heading)', fontWeight: 800, color: '#000000', margin: '0.4rem 0' }}>
+                2,568
+              </div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#171e19' }}>
+                Structural PE Features / File
+              </div>
+              <p style={{ fontSize: '0.82rem', color: '#52525b', marginTop: '0.5rem', lineHeight: 1.4 }}>
+                Byte histograms, Shannon entropy, imported DLL functions, section traits, and DOS headers.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+<section style={{ backgroundColor: '#ffffff', padding: '5rem 2rem', borderBottom: '2px solid #000000' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
