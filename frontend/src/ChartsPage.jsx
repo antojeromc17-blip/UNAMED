@@ -437,7 +437,7 @@ export default function ChartsPage() {
           </div>
         )}
 
-        {/* 4. MODEL COMPARISON BAR CHART */}
+        {/* 4. MODEL COMPARISON BAR CHART (5 COMPREHENSIVE METRICS) */}
         {(activeTab === 'all' || activeTab === 'bar') && (
           <div style={{
             backgroundColor: '#ffffff',
@@ -448,11 +448,20 @@ export default function ChartsPage() {
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
               <div>
-                <h2 style={{ fontSize: '1.8rem' }}>
-                  Comparative Metrics Bar Chart
+                <span style={{
+                  backgroundColor: 'var(--primary-yellow)',
+                  border: '2px solid #000000',
+                  padding: '2px 8px',
+                  borderRadius: '4px',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  marginRight: '8px'
+                }}>5-METRIC AUDIT</span>
+                <h2 style={{ fontSize: '1.8rem', marginTop: '0.5rem' }}>
+                  Comprehensive 5-Metric Comparison
                 </h2>
                 <p style={{ color: '#52525b', fontSize: '0.95rem' }}>
-                  Direct visual comparison across Accuracy, F1 Score, and Precision metrics.
+                  Side-by-side evaluation across <strong>Accuracy</strong>, <strong>Precision</strong>, <strong>Recall</strong>, <strong>F1 Score</strong>, and <strong>ROC-AUC</strong> for all 5 models.
                 </p>
               </div>
 
@@ -478,9 +487,44 @@ export default function ChartsPage() {
             >
               <img 
                 src="/charts/model_comparison_bar.png" 
-                alt="Model Comparison Bar Chart" 
+                alt="5-Metric Model Comparison Bar Chart" 
                 style={{ width: '100%', height: 'auto', display: 'block' }} 
               />
+            </div>
+
+            {/* 5 Metrics Explanation Bar */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '0.8rem',
+              marginTop: '1.5rem',
+              paddingTop: '1.2rem',
+              borderTop: '2px solid #000000'
+            }}>
+              <div style={{ padding: '0.8rem', backgroundColor: '#fffbeb', border: '1px solid #000000', borderRadius: '0.5rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#b45309' }}>● Accuracy</span>
+                <p style={{ fontSize: '0.8rem', color: '#78350f', marginTop: '4px' }}>Overall fraction of safe and malicious files correctly classified.</p>
+              </div>
+
+              <div style={{ padding: '0.8rem', backgroundColor: '#f1f5f9', border: '1px solid #000000', borderRadius: '0.5rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#334155' }}>● Precision</span>
+                <p style={{ fontSize: '0.8rem', color: '#475569', marginTop: '4px' }}>How many flagged files were genuinely malware (minimizing false alarms).</p>
+              </div>
+
+              <div style={{ padding: '0.8rem', backgroundColor: '#eff6ff', border: '1px solid #000000', borderRadius: '0.5rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#1d4ed8' }}>● Recall</span>
+                <p style={{ fontSize: '0.8rem', color: '#1e40af', marginTop: '4px' }}>Fraction of real malware caught (vital for eliminating missed threats).</p>
+              </div>
+
+              <div style={{ padding: '0.8rem', backgroundColor: '#faf5ff', border: '1px solid #000000', borderRadius: '0.5rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#7e22ce' }}>● F1 Score</span>
+                <p style={{ fontSize: '0.8rem', color: '#6b21a8', marginTop: '4px' }}>Harmonic mean balancing precision and recall into a single metric.</p>
+              </div>
+
+              <div style={{ padding: '0.8rem', backgroundColor: '#ecfdf5', border: '1px solid #000000', borderRadius: '0.5rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#047857' }}>● ROC-AUC</span>
+                <p style={{ fontSize: '0.8rem', color: '#065f46', marginTop: '4px' }}>Diagnostic area under curve measuring discriminative power.</p>
+              </div>
             </div>
           </div>
         )}
