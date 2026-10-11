@@ -37,14 +37,14 @@
 * **Text / Bullets on Slide:**
   * Subtitle: Static Feature Analysis & Multi-Model Comparative Evaluation
   * Course: Concepts in Machine Learning (Mini Project)
-  * Student Name: [Your Name] | Register No: [Your KTU Reg No]
+  * Student Name: Anto Jerom C | Register No: [Your KTU Reg No]
   * Branch & Year: B.Tech Computer Science & Engineering (AI & ML) — 2nd Year
   * Department: Department of Computer Science & Engineering
   * Institution: [Your College Name], APJ Abdul Kalam Technological University (KTU)
   * Project Guide: [Guide Professor's Name & Designation]
 * **Visual to Put:** MalScan Logo with subtle tech badges (`Python 3.11`, `FastAPI`, `React`, `LightGBM`).
 * **What to Say:**
-  > *"Good morning respected examiners and professors. My name is [Your Name], a 2nd year B.Tech student in Computer Science & Engineering (AI & ML). Today, I am presenting my Machine Learning Mini Project: **MalScan** — a Windows malware detection system that statically analyzes executable binaries using machine learning without ever executing them."*
+  > *"Good morning respected examiners and professors. My name is Anto Jerom C, a 2nd year B.Tech student in Computer Science & Engineering (AI & ML). Today, I am presenting my Machine Learning Mini Project: **MalScan** — a Windows malware detection system that statically analyzes executable binaries using machine learning without ever executing them."*
 
 ---
 
@@ -144,14 +144,15 @@
 ---
 
 ### SLIDE 8: Feature Engineering: The 2,568 Dimensions
-* **Slide Title:** **Feature Engineering (2,568 Features)**
+* **Slide Title:** **Feature Engineering (2,568 Dimensions)**
 * **Text / Bullets on Slide:**
-  * **1. Byte Histogram (256 dims):** Frequencies of bytes 0x00 through 0xFF.
-  * **2. Byte-Entropy 2D Histogram (256 dims):** Shannon entropy ($H = -\sum p_i \log_2 p_i$) across sliding 1024-byte windows. Highlights encrypted ransomware payloads ($H > 7.8$).
-  * **3. Section Properties (265 dims):** Number of sections, virtual size vs. raw size differences, section entropy, and execution permissions.
-  * **4. Imported Windows APIs (1,280 dims):** Uses MurmurHash3 (Hashing Trick) to bin imported APIs (e.g., `VirtualAlloc`, `WriteProcessMemory`, `CreateRemoteThread`).
-  * **5. Authenticode & Rich Header (507 dims):** Digital signature presence, certificate validity, and Microsoft Rich compiler telemetry.
-  * **6. DOS & General Header (10 dims):** File size, entry point address, subsystem flags.
+  * **1. Byte & Entropy Distributions (512 dims):** Raw byte frequency histogram (256 dims) + Sliding-window 2D Shannon entropy histogram (256 dims). Identifies encrypted ransomware payloads ($H > 7.8$).
+  * **2. Imports & Exports (1,411 dims):** MurmurHash3 2D hashing trick on imported Win32 APIs (`VirtualAlloc`, `WriteProcessMemory`, etc. — 1,282 dims) + Exported symbols (129 dims).
+  * **3. Sections & Data Directories (258 dims):** Section structural anomalies (224 dims: virtual vs. raw size disparities, section counts, entropy) + Data Directory entries (34 dims).
+  * **4. String Extractor & IOC Traits (177 dims):** Printable string counts, length histograms, entropy of strings, file paths, and URL indicators.
+  * **5. PE Headers & Format Warnings (169 dims):** General file info (7 dims) + COFF & Optional PE headers (74 dims) + PE parser anomaly warnings (88 dims).
+  * **6. Authenticode & Rich Header (41 dims):** Microsoft Rich compiler telemetry hashes (33 dims) + Authenticode digital certificate headers (8 dims).
+  * **Exact Verified Dimension Sum:** $512 + 1,411 + 258 + 177 + 169 + 41 = \mathbf{2,568 \text{ Features}}$.
 * **Visual to Put:** A pie chart or bar chart showing the breakdown: Imports (50%), Entropy & Byte Stats (20%), Signatures/Rich (20%), Sections/Headers (10%).
 * **What to Say:**
   > *"How do we convert an executable into machine learning numbers? We extract 2,568 static structural features.
@@ -214,7 +215,7 @@
 * **What to Say:**
   > *"Here are our results on 24,979 unseen test files.
   > LightGBM achieved the highest overall accuracy at 96.88%, an F1-score of 96.85%, and the lowest False Positive Rate at 2.28%, with an inference latency of just 4.8 milliseconds.
-  > Interestingly, Gaussian Naive Bayes achieved 99.14% Recall. It caught almost every malware sample, though with higher false alarms, making it useful as an aggressive screening pre-filter."*
+  > Critical Negative Baseline: Gaussian Naive Bayes achieved an ROC-AUC of only 0.5362 (barely above random chance) with a 70.58% False Positive Rate (flagging 8,808 of 12,479 benign files). Its 99.14% recall is a degenerate symptom of predicting 85% of all files as malware. It mathematically proves why the Naive Bayes conditional independence assumption collapses on correlated PE features, justifying why complex tree ensembles (LightGBM) are strictly required."*
 
 ---
 
@@ -414,7 +415,7 @@ All chart visuals have been generated and saved directly in your project folder 
 # SECTION 5: COMPLETE SPEAKING SCRIPT (8–10 MINUTES)
 
 * **Slide 1 (Title):**
-  > *"Good morning respected professors and external examiners. My name is [Your Name], 2nd year B.Tech in Computer Science and Engineering (AI & ML). Today, I am presenting our Machine Learning Mini Project: MalScan — a Windows malware detection system that statically analyzes executable binaries without executing them."*
+  > *"Good morning respected professors and external examiners. My name is Anto Jerom C, 2nd year B.Tech in Computer Science and Engineering (AI & ML). Today, I am presenting our Machine Learning Mini Project: MalScan — a Windows malware detection system that statically analyzes executable binaries without executing them."*
 * **Slide 2 (Problem Statement):**
   > *"Traditional antivirus tools rely on hash signatures. If an attacker changes even one byte, the hash completely alters and bypasses detection. Dynamic sandboxing takes 5 to 10 minutes to run in a VM, and modern malware deliberately sleeps to evade detection. MalScan parses internal PE structural features statically, providing sub-second zero-day detection with zero execution risk."*
 * **Slide 3 (Objectives):**
@@ -465,7 +466,14 @@ All chart visuals have been generated and saved directly in your project folder 
 **Answer:** *"Memory mapping (`numpy.memmap`) allows reading large binary arrays directly from disk on demand like virtual memory, without loading the full 60 GB dataset into physical RAM."*
 
 ### 5. What are the 2,568 features extracted?
-**Answer:** *"They are grouped into 6 categories: Byte Histograms (256), Sliding-Window Shannon Entropy (256), PE Section Properties (265), Imported Windows API Hashes (1,280), Authenticode Digital Certificates and Rich Header hashes (507), and General File Header traits (10)."*
+**Answer:** *"They are grouped into 6 verified structural categories summing exactly to 2,568:
+1. Byte & Entropy Histograms: 512 dims (ByteHistogram 256 + ByteEntropy 256)
+2. Imports & Exports: 1,411 dims (Imports 1,282 + Exports 129 via MurmurHash3)
+3. Sections & Data Directories: 258 dims (SectionInfo 224 + DataDirectories 34)
+4. String & IOC Traits: 177 dims (string counts, lengths, paths, URLs)
+5. PE Headers & Format Warnings: 169 dims (GeneralInfo 7 + HeaderInfo 74 + Warnings 88)
+6. Authenticode Signatures & Rich Header: 41 dims (RichHeader 33 + Signatures 8)
+Sum: 512 + 1,411 + 258 + 177 + 169 + 41 = 2,568 exact dimensions."*
 
 ### 6. What is Shannon Entropy and why is it important in malware detection?
 **Answer:** *"Shannon Entropy measures the randomness of bytes on a scale from 0 to 8. Plain code has an entropy around 4.5 to 6.0, whereas encrypted or compressed code has an entropy near 8.0. High entropy in unexpected sections is a classic indicator of packed malware or encrypted ransomware payloads."*
@@ -476,8 +484,9 @@ All chart visuals have been generated and saved directly in your project folder 
 ### 8. Which model performed best and why?
 **Answer:** *"LightGBM performed best with 96.88% Accuracy, 96.85% F1-score, and a 2.28% False Positive Rate. It excels because it uses gradient boosted decision trees with leaf-wise tree growth, effectively capturing non-linear interactions across high-dimensional tabular data."*
 
-### 9. Why did Gaussian Naive Bayes get low accuracy (64%) but high recall (99%)?
-**Answer:** *"Naive Bayes assumes all 2,568 features are conditionally independent. In PE files, features are heavily correlated (e.g., file size directly correlates with section sizes). This violates the independence assumption, causing probability overconfidence. It catches almost all malware (99.14% recall) but produces more false alarms."*
+### 9. Why did Gaussian Naive Bayes get low accuracy (64%), high recall (99%), but an AUC of only 0.5362?
+**Answer:** *"Gaussian Naive Bayes is essentially a failing baseline that degenerates into predicting almost everything as malware (it flagged 21,200 out of 24,979 files as malware, an 85% positive prediction rate).
+Because PE structural features are heavily collinear (file size, section virtual sizes, and API import counts are strongly correlated), the conditional independence assumption is completely violated. This pushed its False Positive Rate to 70.58% and its ROC-AUC to 0.5362 (barely better than a 0.50 coin flip). It serves as our critical theoretical negative baseline, proving that naive independent probabilistic models cannot handle PE binary feature spaces."*
 
 ### 10. What is the difference between Precision and Recall in this project?
 **Answer:** *"Precision is: Of all files flagged as malware, how many were actually malware? (Minimizes false alarms). Recall is: Of all actual malware samples, how many did the model catch? (Minimizes missed threats)."*

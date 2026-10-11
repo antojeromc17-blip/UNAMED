@@ -89,7 +89,9 @@ flowchart TD
 
 ### Stage 1: Client Ingestion Layer (`frontend/src/ScanPage.jsx`)
 * **Drag-and-Drop Interface:** Users drop any Windows Portable Executable (`.exe`, `.dll`, `.sys`).
-* **Input Safety Verification:** Enforces file size boundaries and tracks real-time scanning stages (upload $ightarrow$ 2,568 feature extraction $ightarrow$ multi-model inference).
+* **Input Safety Verification:** Enforces file size boundaries and tracks real-time scanning stages (upload $
+ightarrow$ 2,568 feature extraction $
+ightarrow$ multi-model inference).
 * **Model Selection:** Allows scanning via individual algorithms or triggering a **5-Way Concurrent Scan**.
 
 ### Stage 2: API & Quarantine Gateway (`src/api.py`)
@@ -99,12 +101,13 @@ flowchart TD
 
 ### Stage 3: Vectorized Static Feature Extractor (`src/detection.py` & `src/features.py`)
 Extracts **2,568 numerical dimensions** across 6 distinct PE structures:
-1. **Byte Histograms (256 dims):** Normalized frequencies of raw byte values $0x00$ through $0xFF$.
-2. **Byte-Entropy 2D Histograms (256 dims):** Joint distribution of Shannon entropy computed over a sliding 1024-byte window. High entropy ($> 7.8$) indicates packed or encrypted ransomware payloads.
-3. **PE Sections & Headers (265 dims):** Number of sections, section entropy, virtual size vs. raw size disparity, and execution permissions.
-4. **Import/Export Address Tables (1,280 dims):** Employs the **Hashing Trick (MurmurHash3)** to project imported Windows API functions (e.g., `VirtualAlloc`, `WriteProcessMemory`, `CreateRemoteThread`) into a fixed 1,280-bin space.
-5. **Authenticode & Rich Header (507 dims):** Inspects digital certificates, code-signing validity, and Microsoft Rich compiler telemetry.
-6. **General File Info & DOS (10 dims):** File size, entry point address, and subsystem flags.
+1. **Byte & Entropy Distributions (512 dims):** Normalized byte frequency histogram (256 dims) + Sliding-window 2D Shannon entropy histogram (256 dims). Identifies packed or encrypted ransomware payloads ($H > 7.8$).
+2. **Imports & Exports (1,411 dims):** MurmurHash3 2D hashing trick on imported Win32 APIs (1,282 dims) + Exported function table statistics (129 dims).
+3. **Sections & Data Directories (258 dims):** Structural section table anomalies (224 dims: virtual vs. raw size disparities, section counts, entropy) + Data Directory entries (34 dims).
+4. **String Extractor & IOC Traits (177 dims):** Printable string counts, length histograms, paths, and URL indicators.
+5. **PE Headers & Format Warnings (169 dims):** General file info (7 dims) + COFF & Optional PE headers (74 dims) + PE parser anomaly warnings (88 dims).
+6. **Authenticode Signatures & Rich Header (41 dims):** Microsoft Rich compiler telemetry hashes (33 dims) + Authenticode digital certificate headers (8 dims).
+* **Exact Verified Dimension Sum:** $512 + 1,411 + 258 + 177 + 169 + 41 = \mathbf{2,568 \text{ Features}}$.
 
 * **Performance Optimization:** Entropy and byte calculations are executed via vectorized NumPy memory slices, achieving sustained extraction throughput of **over 4.5 MB/s**.
 
