@@ -147,3 +147,12 @@ tr:hover td {
   margin-top: 2rem;
   box-shadow: 8px 8px 0px rgba(255, 77, 0, 0.3);
 }
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
