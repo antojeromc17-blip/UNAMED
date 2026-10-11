@@ -49,20 +49,18 @@
 ## ─── SLIDE 2: Problem Statement & Motivation ───
 
 ### 🎯 Slide Content to Put on PPT:
-* **The Malware Landscape:**
-  * Over 450,000 new malicious binaries are generated every single day.
-  * Attackers use automated polymorphic crypters and packers to mutate code.
-* **Why Traditional Antivirus (Signature Matching) Fails:**
-  * Relies on cryptographic hashes (MD5, SHA-256).
-  * Changing a single irrelevant byte changes the entire hash $\rightarrow$ Complete signature bypass.
-* **Why Dynamic Sandboxing Is Too Slow for Real-Time Triage:**
-  * Requires running the file in a Virtual Machine for 5–10 minutes.
-  * Modern malware detects VM hypervisors, debugger hooks, or uses long sleep timers to stay dormant.
-  * High compute overhead: Cannot triage queues of thousands of incident response files.
-* **The Solution: Static Machine Learning Analysis**
-  * Sub-second evaluation (4.8ms inference).
-  * Zero execution risk (cannot infect host system).
-  * Evaluates structural traits resilient against minor mutations.
+* **1. Real-World Cybersecurity Challenge:**
+  * Over 450,000 new malicious binaries emerge daily via automated polymorphic engines.
+  * Critical need for automated triage tools that evaluate unknown incident response attachments.
+* **2. Why Traditional Solutions Fail:**
+  * **Signature Matching (MD5 / SHA-256):** Fails on zero-day attacks. Adding 1 byte alters the entire hash, resulting in a **100% signature bypass**.
+  * **Dynamic Sandboxing:** Requires spinning up VMs for 5–10 minutes. Malware evades it via hypervisor detection, sleep timers, or mouse hook checks.
+* **3. Formal ML Problem Statement (KTU Syllabus Alignment):**
+  $$\text{Map unexecuted PE binary } B \in \{0, 1\}^* \longrightarrow \Phi(B) = \mathbf{x} \in \mathbb{R}^{2568}$$
+  $$\text{Learn decision boundary } f_\theta(\mathbf{x}) \to \{0, 1\} \quad (0 = \text{Benign}, 1 = \text{Malicious})$$
+  * **Constraint 1 (Safety):** Zero execution risk (static byte parsing only).
+  * **Constraint 2 (Speed):** Sub-second throughput (4.8ms inference).
+  * **Constraint 3 (Reliability):** Low False Positive Rate ($\\le 2.3\\%$).
 
 ### 💡 Visual Recommendation:
 * 3-column comparison table:
@@ -156,16 +154,20 @@
 
 ---
 
-## ─── SLIDE 6: System Architecture & Dataflow ───
+## ─── SLIDE 6: System Architecture & 5-Stage Pipeline ───
 
 ### 🎯 Slide Content to Put on PPT:
-* **End-to-End Pipeline:**
-  $$\text{User Upload (.exe)} \longrightarrow \text{FastAPI Ingestion} \longrightarrow \text{Vectorized Feature Extractor} \longrightarrow \text{Model Inference} \longrightarrow \text{Calibrated Dashboard}$$
-* **Architecture Components:**
-  * **Client Layer:** React 18 + Vite SPA (Neo-Brutalist design, real-time stage updates, file drag-and-drop).
-  * **API Layer:** FastAPI with asynchronous multipart file streaming and CORS middleware.
-  * **Parsing Kernel:** `pefile` + NumPy vectorized sliding-window entropy computation (4.5 MB/s throughput).
-  * **Inference Engine:** Serialized `.pkl` and LightGBM model weights with sub-5ms prediction latency.
+* **The 5-Stage Architecture Pipeline:**
+  1. **Stage 1 (Client Ingestion):** User drops `.exe` in React 18 frontend $\rightarrow$ State machine enforces file validation (<150 MB).
+  2. **Stage 2 (API Gateway & Safe Quarantine):** FastAPI receives multipart stream $\rightarrow$ Loads into in-memory buffer $\rightarrow$ Verifies DOS `0x4D 0x5A` (MZ) magic bytes without disk execution.
+  3. **Stage 3 (Static Feature Extraction Kernel):**
+     * `pefile` parses DOS, COFF, Optional headers, and sections.
+     * Vectorized NumPy histogram (256 bins) + Sliding-window Shannon entropy (256 bins).
+     * 2D Hashing trick maps imported Windows APIs into 1,280 bins.
+     * Authenticode signature and Rich header parsing (507 features).
+     * Output: **Dense 2,568-dimensional float32 vector $\\mathbf{x}$**.
+  4. **Stage 4 (Multi-Model Inference):** Vector is dispatched to 5 trained models in parallel (LightGBM, Random Forest, Decision Tree, Logistic Regression, Gaussian Naive Bayes) $\rightarrow$ Returns continuous probabilities $P(y=1 \mid \mathbf{x})$.
+  5. **Stage 5 (UI Dashboard):** React renders 5-way model comparison, threat dials, confidence percentages, and extraction/inference throughput diagnostics.
 
 ### 💡 Visual Recommendation:
 * Flowchart diagram with boxes:
