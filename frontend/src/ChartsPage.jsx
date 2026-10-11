@@ -309,7 +309,7 @@ export default function ChartsPage() {
           </div>
         )}
 
-        {/* 2. CONFUSION MATRICES PLOT (FULL WIDTH) */}
+        {/* 2. CONFUSION MATRICES: CRISP NATIVE VECTOR GRID (ZERO DISTORTION, 100% READABLE) */}
         {(activeTab === 'all' || activeTab === 'cm') && (
           <div style={{
             backgroundColor: '#ffffff',
@@ -319,56 +319,206 @@ export default function ChartsPage() {
             boxShadow: 'var(--shadow-lg)',
             marginBottom: '3rem'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.5rem' }}>
               <div>
                 <span style={{
-                  backgroundColor: 'var(--accent-sage)',
+                  backgroundColor: 'var(--primary-yellow)',
                   border: '2px solid #000000',
                   padding: '2px 8px',
                   borderRadius: '4px',
                   fontSize: '0.75rem',
                   fontWeight: 800,
                   marginRight: '8px'
-                }}>2x3 GRID</span>
+                }}>CRISP VECTOR VIEW</span>
                 <h2 style={{ fontSize: '1.8rem', marginTop: '0.5rem' }}>
                   Full 5-Model Confusion Matrix Heatmaps
                 </h2>
                 <p style={{ color: '#52525b', fontSize: '0.95rem' }}>
-                  Spacious 2-row x 3-column layout displaying true/false positive and negative distributions.
+                  High-contrast, bold vector matrices rendered directly with zero raster distortion or font thinning.
                 </p>
               </div>
 
               <button
-                onClick={() => setSelectedImage({ src: '/charts/confusion_matrices.png', title: 'Confusion Matrices' })}
+                onClick={() => setSelectedImage({ src: '/charts/confusion_matrices.png?v=' + Date.now(), title: 'Confusion Matrices High-Res Plot' })}
                 className="btn-brutal"
                 style={{ padding: '0.6rem 1.2rem', fontSize: '0.85rem' }}
               >
                 <ZoomIn size={16} />
-                <span>Zoom Fullscreen</span>
+                <span>View Raw Plot (300 DPI)</span>
               </button>
             </div>
 
-            <div 
-              style={{ 
-                border: '2px solid #000000', 
-                borderRadius: '0.75rem', 
-                overflow: 'hidden', 
-                backgroundColor: '#ffffff',
-                cursor: 'pointer'
-              }}
-              onClick={() => setSelectedImage({ src: '/charts/confusion_matrices.png', title: 'Confusion Matrices' })}
-            >
-              <img 
-                src="/charts/confusion_matrices.png" 
-                alt="Confusion Matrices 2x3 Grid" 
-                style={{ width: '100%', height: 'auto', display: 'block' }} 
-              />
+            {/* 2x3 Spacious Native Heatmap Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: '1.5rem',
+              marginBottom: '2rem'
+            }}>
+              {metricsData.map((m, mIdx) => {
+                const isBest = m.model === 'LightGBM';
+                const mTotal = (m.true_negatives || 0) + (m.false_positives || 0) + (m.false_negatives || 0) + (m.true_positives || 0);
+                const tn = m.true_negatives || 0;
+                const fp = m.false_positives || 0;
+                const fn = m.false_negatives || 0;
+                const tp = m.true_positives || 0;
+
+                return (
+                  <div
+                    key={m.model}
+                    style={{
+                      backgroundColor: '#f8fafc',
+                      border: '2px solid #000000',
+                      borderRadius: '0.75rem',
+                      padding: '1.2rem',
+                      boxShadow: isBest ? '4px 4px 0px #000000' : '2px 2px 0px #000000',
+                      position: 'relative'
+                    }}
+                  >
+                    {/* Header */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                      <div style={{ fontWeight: 800, fontFamily: 'var(--font-heading)', fontSize: '1.1rem', color: '#000000' }}>
+                        {m.model}
+                      </div>
+                      <span style={{
+                        backgroundColor: isBest ? 'var(--primary-yellow)' : '#e2e8f0',
+                        color: '#000000',
+                        border: '1px solid #000000',
+                        padding: '1px 7px',
+                        borderRadius: '4px',
+                        fontSize: '0.7rem',
+                        fontWeight: 800
+                      }}>
+                        {isBest ? '★ BEST (96.9%)' : `${(m.accuracy * 100).toFixed(1)}% ACC`}
+                      </span>
+                    </div>
+
+                    <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 700, marginBottom: '0.8rem' }}>
+                      Acc: {(m.accuracy * 100).toFixed(2)}% &nbsp;|&nbsp; F1: {(m.f1_score * 100).toFixed(2)}% &nbsp;|&nbsp; FPR: {(m.fpr * 100).toFixed(2)}%
+                    </div>
+
+                    {/* 2x2 Clean Matrix */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: '1fr 1fr',
+                      gap: '0.5rem',
+                      textAlign: 'center'
+                    }}>
+                      {/* Top Left: TN */}
+                      <div style={{
+                        backgroundColor: '#dcfce7',
+                        border: '2px solid #16a34a',
+                        borderRadius: '0.4rem',
+                        padding: '0.8rem 0.4rem'
+                      }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#166534' }}>TN (Safe)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#14532d', margin: '2px 0' }}>
+                          {tn.toLocaleString()}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#15803d' }}>
+                          {(tn / mTotal * 100).toFixed(1)}%
+                        </div>
+                      </div>
+
+                      {/* Top Right: FP */}
+                      <div style={{
+                        backgroundColor: '#fee2e2',
+                        border: '2px solid #dc2626',
+                        borderRadius: '0.4rem',
+                        padding: '0.8rem 0.4rem'
+                      }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#991b1b' }}>FP (Alarm)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#7f1d1d', margin: '2px 0' }}>
+                          {fp.toLocaleString()}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#b91c1c' }}>
+                          {(fp / mTotal * 100).toFixed(1)}%
+                        </div>
+                      </div>
+
+                      {/* Bottom Left: FN */}
+                      <div style={{
+                        backgroundColor: '#fee2e2',
+                        border: '2px solid #dc2626',
+                        borderRadius: '0.4rem',
+                        padding: '0.8rem 0.4rem'
+                      }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#991b1b' }}>FN (Missed)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#7f1d1d', margin: '2px 0' }}>
+                          {fn.toLocaleString()}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#b91c1c' }}>
+                          {(fn / mTotal * 100).toFixed(1)}%
+                        </div>
+                      </div>
+
+                      {/* Bottom Right: TP */}
+                      <div style={{
+                        backgroundColor: '#dcfce7',
+                        border: '2px solid #16a34a',
+                        borderRadius: '0.4rem',
+                        padding: '0.8rem 0.4rem'
+                      }}>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#166534' }}>TP (Malware)</div>
+                        <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#14532d', margin: '2px 0' }}>
+                          {tp.toLocaleString()}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', fontWeight: 800, color: '#15803d' }}>
+                          {(tp / mTotal * 100).toFixed(1)}%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+
+              {/* 6th Card: Interpretation Guide */}
+              <div style={{
+                backgroundColor: '#fffbeb',
+                border: '2px solid #000000',
+                borderRadius: '0.75rem',
+                padding: '1.2rem',
+                boxShadow: '2px 2px 0px #000000',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+              }}>
+                <div style={{ fontWeight: 800, fontFamily: 'var(--font-heading)', fontSize: '1.1rem', marginBottom: '0.6rem' }}>
+                  MATRIX AUDIT GUIDE
+                </div>
+                <div style={{ fontSize: '0.8rem', lineHeight: 1.5, color: '#1f2937' }}>
+                  <p style={{ marginBottom: '6px' }}><strong>● TN (Safe):</strong> Benign binaries correctly approved.</p>
+                  <p style={{ marginBottom: '6px' }}><strong>● TP (Malware):</strong> Malicious executables detected.</p>
+                  <p style={{ marginBottom: '6px' }}><strong>● FP (Alarms):</strong> Safe binaries falsely blocked (LightGBM lowest: 1.1%).</p>
+                  <p><strong>● FN (Missed):</strong> Undetected threats (threat leakage).</p>
+                </div>
+              </div>
             </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.8rem', color: '#71717a', fontSize: '0.85rem' }}>
-              <Info size={16} />
-              <span>Click image to open high-resolution modal zoom view.</span>
+
+            {/* Also provide the 300 DPI Matplotlib Plot Box with zoom */}
+            <div style={{ borderTop: '2px solid #000000', paddingTop: '1.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.8rem' }}>
+                <span style={{ fontWeight: 800, fontSize: '0.95rem' }}>PUBLICATION-GRADE MATPLOTLIB HEATMAP (300 DPI)</span>
+                <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Click plot to zoom</span>
+              </div>
+              <div 
+                style={{ 
+                  border: '2px solid #000000', 
+                  borderRadius: '0.75rem', 
+                  overflow: 'hidden', 
+                  backgroundColor: '#ffffff',
+                  cursor: 'pointer'
+                }}
+                onClick={() => setSelectedImage({ src: '/charts/confusion_matrices.png?v=' + Date.now(), title: 'Confusion Matrices 300 DPI Plot' })}
+              >
+                <img 
+                  src={'/charts/confusion_matrices.png?v=' + Date.now()} 
+                  alt="Confusion Matrices 2x3 Grid" 
+                  style={{ width: '100%', height: 'auto', display: 'block' }} 
+                />
+              </div>
             </div>
+
           </div>
         )}
 
