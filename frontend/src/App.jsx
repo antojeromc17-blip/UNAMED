@@ -36,7 +36,7 @@ function Navigation() {
           textTransform: 'uppercase',
           color: '#000000'
         }}>
-          SENTINEL<span style={{ color: '#000000' }}>.ML</span>
+          MAL<span style={{ color: '#000000', backgroundColor: 'var(--primary-yellow)', padding: '0 4px', border: '1.5px solid #000000', borderRadius: '4px', marginLeft: '2px' }}>SCAN</span>
         </span>
       </div>
 

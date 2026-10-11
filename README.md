@@ -1,6 +1,6 @@
-# Sentinel ML: Zero-Day Threat Detection
+# MalScan: Zero-Day Threat Detection
 
-Sentinel ML is an advanced, static machine learning malware analysis engine. It extracts 2,568 deep structural features from Windows Portable Executables (.exe, .dll) without executing them, and uses a trained LightGBM model to predict whether the file is benign or malicious.
+MalScan is an advanced, static machine learning malware analysis engine. It extracts 2,568 deep structural features from Windows Portable Executables (.exe, .dll) without executing them, and uses a trained LightGBM model to predict whether the file is benign or malicious.
 
 ## Project Architecture
 * **Dataset:** EMBER 2018 (Balanced subset of 100,000 files)

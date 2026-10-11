@@ -635,7 +635,7 @@ export default function LandingPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
               <ShieldCheck size={24} color="var(--primary-yellow)" />
               <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.2rem', letterSpacing: '-0.02em' }}>
-                MALWARE DETECTOR
+                MALSCAN
               </span>
             </div>
             <p style={{ color: '#b7c6c2', fontSize: '0.85rem', lineHeight: 1.6 }}>
