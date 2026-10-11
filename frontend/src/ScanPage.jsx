@@ -361,21 +361,30 @@ export default function ScanPage() {
               <div style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '1rem',
-                backgroundColor: '#f1f5f9',
-                border: '1px solid #000000',
-                borderRadius: '4px',
-                padding: '4px 12px',
-                fontSize: '0.8rem',
+                gap: '0.75rem',
+                backgroundColor: '#ffffff',
+                border: '2px solid #000000',
+                borderRadius: '6px',
+                padding: '6px 14px',
+                fontSize: '0.82rem',
                 fontWeight: 700,
                 marginBottom: '1.5rem',
-                color: '#334155'
+                color: '#171e19',
+                boxShadow: '3px 3px 0px #000000',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}>
                 <span>FILE SIZE: {(file?.size / 1024).toFixed(1)} KB</span>
-                <span>•</span>
-                <span>SCAN TIME: {scanDuration}s</span>
-                <span>•</span>
-                <span>PARSING RATE: {((file?.size / (1024 * 1024)) / parseFloat(scanDuration)).toFixed(1)} MB/s</span>
+                <span style={{ color: '#94a3b8' }}>•</span>
+                <span>TOTAL TIME: {scanDuration}s</span>
+                <span style={{ color: '#94a3b8' }}>•</span>
+                <span style={{ color: '#16a34a' }}>THROUGHPUT: {((file?.size / (1024 * 1024)) / Math.max(0.01, parseFloat(scanDuration))).toFixed(1)} MB/s</span>
+                {result.extraction_time_ms != null && (
+                  <>
+                    <span style={{ color: '#94a3b8' }}>•</span>
+                    <span style={{ color: '#6366f1' }}>ENGINE: {result.extraction_time_ms}ms extract + {result.inference_time_ms}ms infer</span>
+                  </>
+                )}
               </div>
             )}
 
