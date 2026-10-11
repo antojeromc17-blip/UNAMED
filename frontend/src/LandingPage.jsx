@@ -283,7 +283,7 @@ export default function LandingPage() {
                 100% Independent Validation
               </div>
               <p style={{ fontSize: '0.82rem', color: '#27272a', marginTop: '0.5rem', lineHeight: 1.4 }}>
-                Rigorous evaluation across 12,004 malicious and 12,195 benign samples for accurate confusion matrix audits.
+                Rigorous evaluation across 12,500 malicious and 12,479 benign samples (24,199 correct, 780 errors).
               </p>
             </div>
 

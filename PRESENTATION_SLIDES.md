@@ -110,7 +110,8 @@
     * Exactly 50,000 Malicious Executables (Ransomware, Trojans, Worms, Droppers).
     * **Zero Prior Class Bias:** 1:1 balance prevents majority-class overfitting.
   * **24,979 Held-Out Independent Test Set:**
-    * 12,195 Benign + 12,004 Malicious files (100% unseen validation split).
+    * 12,500 Malicious Binaries + 12,479 Benign Binaries (100% unseen validation split).
+    * Total Correct: 24,199 files (96.88% Accuracy) | Total Errors: 780 files (3.12%).
 * **Data Engineering Rigor:**
   * **Memory-Mapped Streaming (`numpy.memmap`):** Direct disk-to-array vector paging without crashing system RAM on 60 GB files.
 
@@ -238,11 +239,19 @@
 * **The Critical Tradeoff in Cybersecurity:**
   * **False Negative (FN):** Malware classified as Safe $\rightarrow$ **Catastrophic** (System gets infected/ransomed).
   * **False Positive (FP):** Benign file classified as Malware $\rightarrow$ **Disruptive** (Legitimate software blocked).
-* **LightGBM Confusion Matrix (24,979 Test Samples):**
-  * **True Positives (Malware Caught):** **12,004**
-  * **True Negatives (Benign Allowed):** **12,195**
-  * **False Positives (False Alarms):** **284** (only 2.28%)
-  * **False Negatives (Missed Malware):** **496** (only 3.97%)
+* **LightGBM 2x2 Confusion Matrix Breakdown (24,979 Test Samples):**
+  * **Actual Malware (12,500 Total):**
+    * **True Positives (TP):** **12,004** (Malware caught correctly)
+    * **False Negatives (FN):** **496** (Missed malware $\rightarrow$ 3.97% miss rate)
+    * $\text{Malware Total} = 12,004 + 496 = \mathbf{12,500}$
+  * **Actual Benign (12,479 Total):**
+    * **True Negatives (TN):** **12,195** (Legitimate files allowed)
+    * **False Positives (FP):** **284** (False alarms $\rightarrow$ 2.28% FPR)
+    * $\text{Benign Total} = 12,195 + 284 = \mathbf{12,479}$
+  * **Exact Mathematical Verification:**
+    $$\text{TP (12,004)} + \text{TN (12,195)} + \text{FP (284)} + \text{FN (496)} = \mathbf{24,979}$$
+    $$\text{Correctly Classified: } 12,004 + 12,195 = \mathbf{24,199} \ (96.88\%)$$
+    $$\text{Total Errors: } 284 + 496 = \mathbf{780} \ (3.12\%)$$
 * **ROC-AUC Analysis:**
   * LightGBM ROC-AUC: **0.996**
   * Random Forest ROC-AUC: **0.991**
@@ -256,7 +265,8 @@
 ### 🗣️ Speaker Notes (What to Say):
 > *"In machine learning for security, accuracy alone can be misleading. We must examine the Confusion Matrix.*
 >
-> *On 24,979 test binaries, LightGBM caught 12,004 malware binaries and produced only 284 false alarms out of over 12,000 benign files.*
+> *In security, accuracy alone is not enough — we must examine the Confusion Matrix. On our 24,979 test binaries (which consists of 12,500 real malware and 12,479 benign binaries), LightGBM achieved 24,199 correct classifications.*
+> *Specifically, it caught 12,004 out of 12,500 malware binaries (with 496 false negatives) and correctly allowed 12,195 out of 12,479 safe binaries, producing only 284 false alarms. This yields an exceptionally low False Positive Rate of 2.28% and an ROC-AUC of 0.996.*
 >
 > *Furthermore, our ROC-AUC curve is **0.996**. An AUC of 1.0 represents a mathematically perfect classifier. An AUC of 0.996 indicates that there is a 99.6% probability our model will rank a randomly chosen malware file higher than a randomly chosen benign file across any decision threshold."*
 
