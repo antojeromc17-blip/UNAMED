@@ -86,12 +86,12 @@
 | **Signature Antivirus** (ClamAV, Windows Defender) | MD5 / SHA-256 Hash Matching | Extremely fast lookups | Fails completely on novel or mutated zero-day malware |
 | **Dynamic Sandbox** (Cuckoo Sandbox) | VM execution & API Hooking | Observes actual runtime behavior | 5–10 min latency; malware evades via sleep/VM detection |
 | **Legacy Static ML** (EMBER 2018 / LIEF) | Hand-crafted PE parsing | No execution needed | Rigid C++ dependencies (LIEF pinned to Python 3.6) |
-| **Proposed: MalScan** | **EMBER 2024 + pure Python `pefile`** | **Safe, 2,568 features, modern Python 3.11, sub-5ms** | **Focuses on static structural analysis** |
+| **Proposed: MalScan** | **EMBER 2024 (`thrember` on `pefile`)** | **Safe, 2,568 features, modern Python 3.11, sub-5ms** | **Focuses on static structural analysis** |
 
 * **Visual to Put:** Comparison table highlighting MalScan's balance of speed, safety, and modern compatibility.
 * **What to Say:**
   > *"Looking at existing literature: signature-based scanners are fast but miss zero-days. Dynamic sandboxes catch behavior but are too slow. Early machine learning benchmarks like EMBER 2018 were stuck on Python 3.6 due to rigid C++ libraries.
-  > In MalScan, we utilize the modern EMBER 2024 standard using pure-Python `pefile`, which extracts 2,568 features and runs in modern Python 3.11."*
+  > In MalScan, we utilize the modern EMBER 2024 standard (`thrember` built on `pefile`), which extracts 2,568 features and runs in modern Python 3.11."*
 
 ---
 
@@ -185,7 +185,7 @@
   * **Project Structure:**
     * `src/data_loader.py`: Memory-mapped ingestion of EMBER 2024 `.dat` arrays.
     * `src/training.py`: Model training, hyperparameter setup, and metric evaluation.
-    * `src/detection.py`: High-throughput PE parser and vectorized feature extraction kernel.
+    * `src/detection.py`: Vectorized feature extraction kernel using `thrember` on top of `pefile`.
     * `src/api.py`: FastAPI endpoints (`/scan`, `/models`, `/`) with safe memory quarantine.
     * `frontend/src/`: React 18 single-page application with Neo-Brutalist UI.
   * **Inference Speed Optimization:**
@@ -453,7 +453,10 @@ All chart visuals have been generated and saved directly in your project folder 
 
 # SECTION 6: VIVA / QUESTIONS PREP (TOP 20 QUESTIONS & ANSWERS)
 
-### 1. What dataset did you use and why?
+### 1. Which library parses the files: `pefile` or `thrember`?
+**Answer:** *"They work together in a two-tier pipeline: **`pefile`** is the low-level parser that reads the raw binary headers, sections, and certificates into memory without execution. **`thrember`** (the EMBER 2024 feature framework) operates on top of `pefile` to compute Shannon entropy, hash the imported API functions, and assemble the final 2,568-dimensional float32 feature vector."*
+
+### 2. What dataset did you use and why?
 **Answer:** *"We used the EMBER 2024 benchmark (Elastic Malware Benchmark), which contains 3.12 million files. We used it because it is the latest academic standard for static Windows PE malware detection and replaces legacy LIEF dependencies with pure-Python `pefile`."*
 
 ### 2. How many samples did you train and test on?
