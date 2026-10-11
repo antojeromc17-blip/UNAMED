@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import axios from 'axios'
-import { ShieldCheck, AlertOctagon, Binary, FileCog, FileCode2, Cpu, CheckCircle2, Layers } from 'lucide-react'
+import { ShieldCheck, AlertOctagon, Binary, FileCog, FileCode2, Layers, ArrowRight, Zap, CheckCircle2 } from 'lucide-react'
 import { InteractiveFolder } from './InteractiveFolder'
 
 const MODEL_OPTIONS = [
@@ -84,263 +84,358 @@ export default function ScanPage() {
   const activeModelMeta = MODEL_OPTIONS.find(m => m.id === selectedModel) || MODEL_OPTIONS[0]
 
   const folderItems = [
-    <div key="1" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><Binary size={24} color="#93C5FD" /><span style={{fontSize:'10px', color:'#000000', marginTop:'4px', fontWeight:'bold'}}>.EXE</span></div>,
-    <div key="2" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><FileCog size={24} color="#93C5FD" /><span style={{fontSize:'10px', color:'#000000', marginTop:'4px', fontWeight:'bold'}}>.DLL</span></div>,
-    <div key="3" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><FileCode2 size={24} color="#93C5FD" /><span style={{fontSize:'10px', color:'#000000', marginTop:'4px', fontWeight:'bold'}}>.SYS</span></div>
+    <div key="1" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><Binary size={24} color="#000000" /><span style={{fontSize:'10px', color:'#000000', marginTop:'4px', fontWeight:'800'}}>.EXE</span></div>,
+    <div key="2" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><FileCog size={24} color="#000000" /><span style={{fontSize:'10px', color:'#000000', marginTop:'4px', fontWeight:'800'}}>.DLL</span></div>,
+    <div key="3" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}><FileCode2 size={24} color="#000000" /><span style={{fontSize:'10px', color:'#000000', marginTop:'4px', fontWeight:'800'}}>.SYS</span></div>
   ];
 
   return (
-    <div className="container" style={{ textAlign: 'center', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      <h1 style={{ fontSize: '3.8rem', marginBottom: '0.8rem', textTransform: 'uppercase' }}>
-        Zero-Day Threat Detection
-      </h1>
-      <p style={{ fontWeight: 'bold', maxWidth: '750px', marginBottom: '1.5rem' }}>
-        Upload any Windows executable (.exe, .dll, .sys). Select your preferred ML classifier or run the full multi-model ensemble consensus.
-      </p>
-
-      {/* MODEL SELECTION PANEL */}
-      <div style={{ width: '100%', maxWidth: '900px', marginBottom: '2rem', textAlign: 'left' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem' }}>
-          <span style={{ 
-            fontFamily: 'var(--font-mono)', 
-            fontWeight: 'bold', 
-            fontSize: '0.85rem', 
-            letterSpacing: '1px', 
-            color: '#000000' 
-          }}>
-            // 1. SELECT DETECTION ENGINE:
-          </span>
-          <span style={{ 
-            fontFamily: 'var(--font-mono)', 
-            fontSize: '0.75rem', 
-            backgroundColor: '#000000', 
-            color: '#FF4D00', 
-            padding: '3px 8px', 
-            fontWeight: 'bold',
-            border: '2px solid #000000'
-          }}>
-            ACTIVE: {activeModelMeta.name.toUpperCase()}
-          </span>
-        </div>
-
-        {/* Brutalist Button Pill Grid */}
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(135px, 1fr))', 
-          gap: '0.5rem',
-          marginBottom: '0.6rem' 
-        }}>
-          {MODEL_OPTIONS.map((m) => {
-            const isSelected = selectedModel === m.id
-            return (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => setSelectedModel(m.id)}
-                style={{
-                  backgroundColor: isSelected ? '#000000' : '#FFFFFF',
-                  color: isSelected ? '#FF4D00' : '#000000',
-                  border: '3px solid #000000',
-                  boxShadow: isSelected ? '4px 4px 0px #000000' : '2px 2px 0px #000000',
-                  padding: '0.55rem 0.4rem',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 'bold',
-                  transform: isSelected ? 'translate(-2px, -2px)' : 'none',
-                  transition: 'all 0.1s ease',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '4px'
-                }}
-              >
-                <div style={{ fontSize: '0.8rem', lineHeight: '1.1' }}>{m.name}</div>
-                <span style={{
-                  fontSize: '0.62rem',
-                  padding: '1px 5px',
-                  backgroundColor: isSelected ? '#FF4D00' : '#000000',
-                  color: isSelected ? '#000000' : '#FFFFFF',
-                  fontWeight: '900',
-                  letterSpacing: '0.5px'
-                }}>
-                  {m.tag}
-                </span>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Model Spec Callout */}
-        <div style={{
-          backgroundColor: '#000000',
-          color: '#FFFFFF',
-          border: '2px solid #000000',
-          padding: '0.5rem 0.8rem',
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.75rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.5rem',
-          boxShadow: '3px 3px 0px #000000'
-        }}>
-          <span style={{ color: '#FF4D00', fontWeight: 'bold' }}>MODEL INTEL:</span>
-          <span style={{ color: '#E2E8F0' }}>{activeModelMeta.desc}</span>
-        </div>
-      </div>
-
-      {/* UPLOAD ZONE */}
-      <div className="upload-zone" style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <input 
-          type="file" 
-          ref={fileInputRef} 
-          style={{ display: 'none' }} 
-          onChange={handleFileChange} 
-          accept=".exe,.dll,.sys" 
-        />
+    <div className="bg-dot-pattern" style={{ minHeight: 'calc(100vh - 80px)', padding: '3.5rem 1.5rem 5rem 1.5rem' }}>
+      <div style={{ maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
         
-        <div style={{ marginBottom: '1.5rem' }}>
-          <InteractiveFolder 
-            size={1.5} 
-            color="#93C5FD" 
-            label={file ? "UPLOADED" : "UPLOAD"}
-            items={folderItems}
-            onItemClick={() => fileInputRef.current.click()}
-          />
+        {/* Header Badge & Title */}
+        <div style={{
+          backgroundColor: '#ffffff',
+          border: '2px solid #000000',
+          borderRadius: '9999px',
+          padding: '0.35rem 1.2rem',
+          boxShadow: '2px 2px 0px #000000',
+          marginBottom: '1rem',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <Zap size={16} fill="var(--primary-yellow)" color="#000000" />
+          <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.85rem' }}>
+            STATIC PE ANALYSIS ENGINE
+          </span>
         </div>
 
-        {file ? (
-          <div style={{ 
-            backgroundColor: '#000000', 
-            color: '#FFFFFF', 
-            border: '3px solid #000000', 
-            padding: '0.6rem 1.4rem', 
-            boxShadow: '4px 4px 0px #000000' 
-          }}>
-            <span style={{ color: '#FF4D00', fontFamily: 'var(--font-mono)', marginRight: '8px' }}>TARGET PE:</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 'bold' }}>{file.name}</span>
-            <span style={{ color: '#94A3B8', fontFamily: 'var(--font-mono)', marginLeft: '10px', fontSize: '0.8rem' }}>
-              ({(file.size / 1024).toFixed(1)} KB)
+        <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 3.8rem)', marginBottom: '0.8rem', color: '#000000' }}>
+          ZERO-DAY THREAT SCANNER
+        </h1>
+        <p style={{ maxWidth: '680px', fontSize: '1.1rem', color: '#171e19', marginBottom: '2.5rem', fontWeight: 500 }}>
+          Upload any Windows executable (.exe, .dll, .sys). Select an algorithm or run all 5 models via Ensemble Consensus.
+        </p>
+
+        {/* MODEL SELECTION BOX */}
+        <div style={{
+          width: '100%',
+          backgroundColor: '#ffffff',
+          border: '2px solid #000000',
+          borderRadius: '1rem',
+          padding: '1.5rem',
+          boxShadow: 'var(--shadow-md)',
+          marginBottom: '2rem',
+          textAlign: 'left'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '0.95rem', textTransform: 'uppercase' }}>
+              // CHOOSE DETECTION ENGINE:
+            </span>
+            <span style={{
+              backgroundColor: 'var(--primary-yellow)',
+              border: '2px solid #000000',
+              padding: '2px 10px',
+              borderRadius: '9999px',
+              fontFamily: 'var(--font-heading)',
+              fontSize: '0.75rem',
+              fontWeight: 800
+            }}>
+              ACTIVE: {activeModelMeta.name.toUpperCase()}
             </span>
           </div>
-        ) : (
-          <h2 style={{ color: 'var(--text-main)', fontSize: '1.4rem' }}>CLICK FOLDER TO SELECT FILE</h2>
-        )}
-      </div>
 
-      {/* ACTION BUTTON */}
-      <div style={{ marginTop: '2.5rem', marginBottom: '2.5rem' }}>
-        <button 
-          className="btn" 
-          onClick={scanFile} 
-          disabled={!file || loading}
-          style={{ minWidth: '260px' }}
-        >
-          {loading ? `ANALYZING WITH ${activeModelMeta.name.toUpperCase()}...` : `ANALYZE WITH ${activeModelMeta.name.toUpperCase()}`}
-        </button>
-      </div>
-
-      {/* SCAN RESULTS CARD */}
-      {result && !result.error && (
-        <div 
-          className={`glass-panel result-card ${result.is_malware ? 'danger' : 'safe'}`} 
-          style={{ width: '100%', maxWidth: '900px' }}
-        >
-          {result.is_malware ? <AlertOctagon className="status-icon" /> : <ShieldCheck className="status-icon" />}
-          
-          <h1 style={{ 
-            fontSize: '2.8rem', 
-            margin: '0.8rem 0', 
-            color: result.is_malware ? 'var(--orange)' : 'var(--white)' 
-          }}>
-            {result.is_malware ? 'MALWARE DETECTED' : 'SAFE / BENIGN'}
-          </h1>
-          
+          {/* Model Button Pills Grid */}
           <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            gap: '3.5rem', 
-            marginTop: '2rem',
-            flexWrap: 'wrap'
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(auto-fit, minmax(135px, 1fr))', 
+            gap: '0.6rem',
+            marginBottom: '1rem' 
           }}>
-            <div>
-              <p style={{ color: 'var(--white)', fontSize: '1.1rem' }}>VERDICT CONFIDENCE</p>
-              <h2 style={{ color: result.is_malware ? 'var(--orange)' : 'var(--white)', fontSize: '2.2rem' }}>
-                {(result.confidence * 100).toFixed(2)}%
-              </h2>
-            </div>
-            <div>
-              <p style={{ color: 'var(--white)', fontSize: '1.1rem' }}>EVALUATION ENGINE</p>
-              <h2 style={{ color: 'var(--white)', fontSize: '2.2rem' }}>{result.model_used}</h2>
-            </div>
-            <div>
-              <p style={{ color: 'var(--white)', fontSize: '1.1rem' }}>FILE SCANNED</p>
-              <h2 style={{ color: 'var(--white)', fontSize: '1.8rem', fontFamily: 'var(--font-mono)' }}>
-                {result.file}
-              </h2>
-            </div>
+            {MODEL_OPTIONS.map((m) => {
+              const isSelected = selectedModel === m.id
+              return (
+                <button
+                  key={m.id}
+                  type="button"
+                  onClick={() => setSelectedModel(m.id)}
+                  style={{
+                    backgroundColor: isSelected ? 'var(--bg-charcoal)' : '#ffffff',
+                    color: isSelected ? 'var(--primary-yellow)' : '#000000',
+                    border: '2px solid #000000',
+                    borderRadius: '0.6rem',
+                    boxShadow: isSelected ? '2px 2px 0px #000000' : 'var(--shadow-sm)',
+                    padding: '0.65rem 0.5rem',
+                    cursor: 'pointer',
+                    textAlign: 'center',
+                    fontFamily: 'var(--font-heading)',
+                    fontWeight: 800,
+                    transform: isSelected ? 'translate(2px, 2px)' : 'none',
+                    transition: 'all 0.15s ease',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  <div style={{ fontSize: '0.85rem' }}>{m.name}</div>
+                  <span style={{
+                    fontSize: '0.65rem',
+                    padding: '1px 6px',
+                    borderRadius: '4px',
+                    border: '1px solid #000000',
+                    backgroundColor: isSelected ? 'var(--primary-yellow)' : 'var(--accent-sage)',
+                    color: '#000000',
+                    fontWeight: 800
+                  }}>
+                    {m.tag}
+                  </span>
+                </button>
+              )
+            })}
           </div>
 
-          {/* MULTI-ENGINE BREAKDOWN (IF ENSEMBLE OR MULTI-MODEL) */}
-          {result.models_breakdown && (
-            <div style={{ marginTop: '2.5rem', borderTop: '2px solid rgba(255,255,255,0.2)', paddingTop: '1.5rem', textAlign: 'left' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1rem' }}>
-                <Layers size={20} color="#FF4D00" />
-                <h3 style={{ color: '#FFFFFF', fontSize: '1.2rem', margin: 0 }}>
-                  CONSENSUS BREAKDOWN ACROSS ALL 5 MODELS
-                </h3>
+          {/* Model Description Box */}
+          <div style={{
+            backgroundColor: 'var(--accent-sage)',
+            border: '2px solid #000000',
+            borderRadius: '0.5rem',
+            padding: '0.75rem 1rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.6rem',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            color: '#171e19'
+          }}>
+            <span style={{ backgroundColor: '#000000', color: '#ffffff', padding: '1px 6px', borderRadius: '4px', fontSize: '0.7rem', fontWeight: 800 }}>INFO</span>
+            <span>{activeModelMeta.desc}</span>
+          </div>
+        </div>
+
+        {/* UPLOAD CONTAINER */}
+        <div style={{
+          width: '100%',
+          backgroundColor: '#ffffff',
+          border: '2px solid #000000',
+          borderRadius: '1rem',
+          padding: '2.5rem 1.5rem',
+          boxShadow: 'var(--shadow-md)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
+        }}>
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            style={{ display: 'none' }} 
+            onChange={handleFileChange} 
+            accept=".exe,.dll,.sys" 
+          />
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <InteractiveFolder 
+              size={1.5} 
+              color="#ffe17c" 
+              label={file ? "UPLOADED" : "UPLOAD"}
+              items={folderItems}
+              onItemClick={() => fileInputRef.current.click()}
+            />
+          </div>
+
+          {file ? (
+            <div style={{
+              backgroundColor: 'var(--primary-yellow)',
+              border: '2px solid #000000',
+              borderRadius: '0.5rem',
+              padding: '0.6rem 1.5rem',
+              boxShadow: '2px 2px 0px #000000',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem'
+            }}>
+              <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>TARGET BINARY:</span>
+              <span style={{ fontWeight: 800, fontFamily: 'monospace', fontSize: '1rem' }}>{file.name}</span>
+              <span style={{ fontSize: '0.8rem', color: '#52525b' }}>({(file.size / 1024).toFixed(1)} KB)</span>
+            </div>
+          ) : (
+            <h3 style={{ fontSize: '1.2rem', color: '#000000', marginTop: '0.5rem' }}>
+              CLICK FOLDER TO SELECT EXECUTABLE (.EXE, .DLL, .SYS)
+            </h3>
+          )}
+
+          <div style={{ marginTop: '2rem' }}>
+            <button 
+              className="btn-brutal"
+              onClick={scanFile}
+              disabled={!file || loading}
+              style={{ minWidth: '260px' }}
+            >
+              <span>{loading ? `ANALYZING WITH ${activeModelMeta.name.toUpperCase()}...` : `ANALYZE WITH ${activeModelMeta.name.toUpperCase()}`}</span>
+              <ArrowRight size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* RESULTS CARD */}
+        {result && !result.error && (
+          <div style={{
+            width: '100%',
+            marginTop: '2.5rem',
+            backgroundColor: result.is_malware ? '#ffffff' : '#ffffff',
+            border: '2px solid #000000',
+            borderRadius: '1rem',
+            boxShadow: 'var(--shadow-lg)',
+            padding: '2.5rem',
+            textAlign: 'center'
+          }}>
+            {/* Status Header Badge */}
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.75rem',
+              backgroundColor: result.is_malware ? '#ff5f57' : 'var(--accent-sage)',
+              color: result.is_malware ? '#ffffff' : '#000000',
+              border: '2px solid #000000',
+              borderRadius: '9999px',
+              padding: '0.6rem 1.8rem',
+              boxShadow: '4px 4px 0px #000000',
+              marginBottom: '1.5rem'
+            }}>
+              {result.is_malware ? <AlertOctagon size={28} /> : <ShieldCheck size={28} />}
+              <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 800, fontSize: '1.4rem', letterSpacing: '-0.02em' }}>
+                {result.is_malware ? 'MALWARE DETECTED' : 'SAFE / BENIGN'}
+              </span>
+            </div>
+
+            <h2 style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>
+              {result.file}
+            </h2>
+
+            {/* Metrics Grid */}
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gap: '1rem',
+              marginBottom: '2rem'
+            }}>
+              <div style={{
+                backgroundColor: 'var(--primary-yellow)',
+                border: '2px solid #000000',
+                borderRadius: '0.5rem',
+                padding: '1.2rem',
+                boxShadow: 'var(--shadow-sm)'
+              }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>VERDICT CONFIDENCE</div>
+                <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                  {(result.confidence * 100).toFixed(2)}%
+                </div>
               </div>
 
-              <div style={{ 
-                display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-                gap: '1rem' 
+              <div style={{
+                backgroundColor: 'var(--accent-sage)',
+                border: '2px solid #000000',
+                borderRadius: '0.5rem',
+                padding: '1.2rem',
+                boxShadow: 'var(--shadow-sm)'
               }}>
-                {Object.entries(result.models_breakdown).map(([mName, mData]) => (
-                  <div 
-                    key={mName}
-                    style={{
-                      backgroundColor: '#111111',
-                      border: '2px solid #333333',
-                      borderLeft: mData.is_malware ? '4px solid #FF4D00' : '4px solid #10B981',
-                      padding: '0.8rem 1rem',
-                      fontFamily: 'var(--font-mono)'
-                    }}
-                  >
-                    <div style={{ fontSize: '0.9rem', color: '#FFFFFF', fontWeight: 'bold', marginBottom: '4px' }}>
-                      {mName}
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ 
-                        fontSize: '0.75rem',
-                        padding: '2px 6px',
-                        backgroundColor: mData.is_malware ? '#FF4D00' : '#10B981',
-                        color: mData.is_malware ? '#000000' : '#FFFFFF',
-                        fontWeight: 'bold'
-                      }}>
-                        {mData.is_malware ? 'MALWARE' : 'BENIGN'}
-                      </span>
-                      <span style={{ color: '#E2E8F0', fontSize: '0.85rem', fontWeight: 'bold' }}>
-                        {(mData.confidence * 100).toFixed(1)}%
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                <div style={{ fontSize: '0.8rem', fontWeight: 800 }}>EVALUATION ENGINE</div>
+                <div style={{ fontSize: '1.8rem', fontFamily: 'var(--font-heading)', fontWeight: 800, marginTop: '0.3rem' }}>
+                  {result.model_used}
+                </div>
+              </div>
+
+              <div style={{
+                backgroundColor: 'var(--bg-charcoal)',
+                color: '#ffffff',
+                border: '2px solid #000000',
+                borderRadius: '0.5rem',
+                padding: '1.2rem',
+                boxShadow: 'var(--shadow-sm)'
+              }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--primary-yellow)', fontWeight: 800 }}>THREAT PROBABILITY</div>
+                <div style={{ fontSize: '2.4rem', fontFamily: 'var(--font-heading)', fontWeight: 800 }}>
+                  {(result.malware_probability * 100).toFixed(1)}%
+                </div>
               </div>
             </div>
-          )}
-        </div>
-      )}
 
-      {/* ERROR CARD */}
-      {result && result.error && (
-        <div className="glass-panel result-card danger" style={{ marginTop: '2rem', width: '100%', maxWidth: '900px' }}>
-          <AlertOctagon className="status-icon" />
-          <h3 style={{ color: 'var(--orange)' }}>ANALYSIS FAILED</h3>
-          <p style={{ color: 'var(--white)', marginTop: '0.5rem' }}>{result.error}</p>
-        </div>
-      )}
+            {/* Ensemble 5-Model Breakdown */}
+            {result.models_breakdown && (
+              <div style={{
+                borderTop: '2px solid #000000',
+                paddingTop: '2rem',
+                textAlign: 'left'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                  <Layers size={20} color="#000000" />
+                  <h3 style={{ fontSize: '1.2rem' }}>CONSENSUS BREAKDOWN ACROSS ALL 5 MODELS</h3>
+                </div>
+
+                <div style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                  gap: '0.75rem'
+                }}>
+                  {Object.entries(result.models_breakdown).map(([mName, mData]) => (
+                    <div
+                      key={mName}
+                      style={{
+                        backgroundColor: '#ffffff',
+                        border: '2px solid #000000',
+                        borderRadius: '0.5rem',
+                        padding: '0.8rem',
+                        boxShadow: '2px 2px 0px #000000'
+                      }}
+                    >
+                      <div style={{ fontSize: '0.85rem', fontWeight: 800, marginBottom: '6px' }}>{mName}</div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 800,
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          border: '1px solid #000000',
+                          backgroundColor: mData.is_malware ? '#ff5f57' : 'var(--accent-sage)',
+                          color: mData.is_malware ? '#ffffff' : '#000000'
+                        }}>
+                          {mData.is_malware ? 'MALWARE' : 'BENIGN'}
+                        </span>
+                        <span style={{ fontWeight: 800, fontSize: '0.9rem' }}>
+                          {(mData.confidence * 100).toFixed(1)}%
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* ERROR CARD */}
+        {result && result.error && (
+          <div style={{
+            width: '100%',
+            marginTop: '2rem',
+            backgroundColor: '#ffffff',
+            border: '2px solid #000000',
+            borderRadius: '1rem',
+            boxShadow: 'var(--shadow-md)',
+            padding: '2rem'
+          }}>
+            <div style={{ color: '#ff5f57', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <AlertOctagon size={28} />
+              <h3 style={{ fontSize: '1.4rem' }}>SCAN FAILED</h3>
+            </div>
+            <p style={{ color: '#52525b', fontWeight: 600 }}>{result.error}</p>
+          </div>
+        )}
+
+      </div>
     </div>
   )
 }
